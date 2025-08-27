@@ -1,0 +1,51 @@
+# VOLaM-RAG Project Rules
+
+## Mission
+Ship a VOLaM-RAG prototype that ranks evidence by: VOLaM_score = α·cosine + β·(1−nullness) + γ·empathy_fit.
+Show ΔNullness over time and beat a cosine-only baseline on accuracy + calibration.
+
+## Tech defaults
+- Backend: TypeScript/Node (Fastify/Express ok)
+- UI: React (Vite or Next)
+- Vector store: FAISS/SQLite/Chroma (local)
+- Tests: Vitest/Jest; Coverage for scoring & nullness update rules
+- Lint/format: ESLint + Prettier
+
+## Repo layout (create if missing)
+- /api, /ui, /scripts, /data, /reports, /docs
+
+## Canonical commands (create Makefile or npm scripts):
+- make setup        # install deps
+- make seed         # chunk + embed corpus
+- make api          # start API
+- make ui           # start web app
+- make eval-baseline
+- make eval-volam
+
+## Definitions
+- Nullness n ∈ [0,1]; certainty = 1−n.
+- Empathy profile = stakeholder weights vector.
+
+## Acceptance criteria (core)
+- /rank?mode=baseline and /rank?mode=volam
+- Answer composer cites top-k evidence; exposes predicted confidence
+- ΔNullness history persists per concept
+- Eval: +10% absolute accuracy vs baseline on 50 Q/A; Brier/ECE ↓ ≥15%
+
+## Work style for issues
+- When given an Issue #:
+  1) Read issue, restate plan, and list files to touch.
+  2) Create a short task list; ask approval before running commands.
+  3) Create feature branch: feat/<issue-number>-<slug>
+  4) Implement + tests; run eval scripts.
+  5) Open PR: “Fixes #<issue>”; paste brief results & screenshots.
+
+## Guardrails
+- Never push secrets.
+- Ask before destructive commands or large refactors.
+- Keep diffs small; aim for <300 lines per PR.
+
+## Evaluation hooks
+- Log α,β,γ, top-k scores, and ΔNullness per request.
+- Write results to /reports and include summary table.
+
