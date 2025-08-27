@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://volam-rag.com/schemas/concept.json",
+  "title": "Concept",
+  "description": "An abstract concept tracked for nullness evolution in VOLaM-RAG",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this concept",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name or description of the concept",
+      "minLength": 1
+    },
+    "currentNullness": {
+      "type": "number",
+      "description": "Current nullness level for this concept",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "nullnessHistory": {
+      "type": "array",
+      "description": "Historical nullness values with timestamps",
+      "items": {
+        "$ref": "#/definitions/nullnessHistoryEntry"
+      }
+    },
+    "relatedEvidence": {
+      "type": "array",
+      "description": "Related evidence pieces that inform this concept",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this concept was first created"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this concept was last updated"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional concept metadata",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "currentNullness",
+    "nullnessHistory",
+    "relatedEvidence",
+    "createdAt",
+    "updatedAt",
+    "metadata"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "nullnessHistoryEntry": {
+      "type": "object",
+      "description": "Single entry in a concept's nullness history",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this nullness value was recorded"
+        },
+        "nullness": {
+          "type": "number",
+          "description": "The nullness value at this time",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "trigger": {
+          "type": "string",
+          "enum": ["evidence_added", "manual_update", "system_recalculation"],
+          "description": "What triggered this nullness update"
+        },
+        "context": {
+          "type": "string",
+          "description": "Optional context about the update"
+        }
+      },
+      "required": ["timestamp", "nullness", "trigger"],
+      "additionalProperties": false
+    }
+  }
+}

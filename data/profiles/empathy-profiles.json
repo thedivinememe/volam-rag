@@ -1,0 +1,20 @@
+{
+  "default": {
+    "name": "Default Profile",
+    "stakeholders": {
+      "general_public": 0.4,
+      "experts": 0.3,
+      "policymakers": 0.2,
+      "affected_communities": 0.1
+    }
+  },
+  "climate_focused": {
+    "name": "Climate-Focused Profile",
+    "stakeholders": {
+      "affected_communities": 0.4,
+      "environmental_scientists": 0.3,
+      "policymakers": 0.2,
+      "general_public": 0.1
+    }
+  }
+}

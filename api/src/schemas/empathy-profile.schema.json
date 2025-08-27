@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "empathy-profile.schema.json",
+  "title": "EmpathyProfile",
+  "description": "Schema for empathy profile configuration with stakeholder weights",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the empathy profile",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name for the empathy profile",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description of the empathy profile's purpose and context"
+    },
+    "stakeholders": {
+      "type": "object",
+      "description": "Mapping of stakeholder types to their importance weights",
+      "patternProperties": {
+        "^[a-zA-Z][a-zA-Z0-9_-]*$": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Weight value for this stakeholder type (0-1)"
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the profile was created"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the profile was last updated"
+    },
+    "isActive": {
+      "type": "boolean",
+      "description": "Whether this profile is currently active/available"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for the empathy profile",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when the profile was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when the profile was last updated"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version identifier for the empathy profile"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Tags for categorizing and organizing empathy profiles"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": ["id", "name", "stakeholders", "createdAt", "updatedAt", "isActive"],
+  "additionalProperties": false
+}

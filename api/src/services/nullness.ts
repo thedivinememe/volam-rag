@@ -1,4 +1,4 @@
-import { RankingResult } from './ranking.js';
+import { RankingResult } from '../types/core.js';
 
 export interface NullnessHistory {
   concept: string;

@@ -178,7 +178,5 @@ class SeedService {
 }
 
 // Run the seeding process
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const seedService = new SeedService();
-  seedService.run();
-}
+const seedService = new SeedService();
+seedService.run();

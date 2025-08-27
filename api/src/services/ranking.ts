@@ -1,20 +1,4 @@
-export interface Evidence {
-  id: string;
-  content: string;
-  score: number;
-  cosineScore: number;
-  nullness: number;
-  empathyFit: number;
-  source: string;
-  metadata: Record<string, any>;
-}
-
-export interface RankingResult {
-  evidence: Evidence[];
-  answer: string;
-  confidence: number;
-  nullness: number;
-}
+import { Evidence, RankingResult } from '../types/core.js';
 
 export class RankingService {
   private vectorStore: any; // Will be initialized with FAISS/Chroma
@@ -61,7 +45,8 @@ export class RankingService {
       evidence: mockEvidence.slice(0, k),
       answer,
       confidence,
-      nullness
+      nullness,
+      mode: 'baseline'
     };
   }
 
@@ -122,7 +107,9 @@ export class RankingService {
       evidence: mockEvidence.slice(0, k),
       answer,
       confidence,
-      nullness
+      nullness,
+      mode: 'volam',
+      parameters: { alpha, beta, gamma }
     };
   }
 
