@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-
 import { NullnessChart } from './components/NullnessChart';
 import { QueryInterface } from './components/QueryInterface';
 import { ResultsDisplay } from './components/ResultsDisplay';
+import { useState } from 'react';
 
 interface Evidence {
   id: string;
@@ -12,7 +11,7 @@ interface Evidence {
   nullness: number;
   empathyFit: number;
   source: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 interface QueryResult {

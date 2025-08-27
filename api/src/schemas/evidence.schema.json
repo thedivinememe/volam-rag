@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://volam-rag.com/schemas/evidence.json",
+  "title": "Evidence",
+  "description": "A single piece of evidence in the VOLaM-RAG knowledge base",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this evidence piece",
+      "minLength": 1
+    },
+    "content": {
+      "type": "string",
+      "description": "The actual textual content of the evidence",
+      "minLength": 1
+    },
+    "score": {
+      "type": "number",
+      "description": "Final computed score for this evidence piece",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "cosineScore": {
+      "type": "number",
+      "description": "Cosine similarity score between evidence and query",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "nullness": {
+      "type": "number",
+      "description": "Nullness score representing uncertainty about this evidence",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "empathyFit": {
+      "type": "number",
+      "description": "Empathy fit score based on stakeholder alignment",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "source": {
+      "type": "string",
+      "description": "Source document or location where this evidence originated",
+      "minLength": 1
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for tracking and debugging",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "id",
+    "content",
+    "score",
+    "cosineScore",
+    "nullness",
+    "empathyFit",
+    "source",
+    "metadata"
+  ],
+  "additionalProperties": false
+}
