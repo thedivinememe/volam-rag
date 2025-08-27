@@ -141,7 +141,7 @@ class VOLaMEvaluator {
 
         console.log(`  ✓ Accuracy: ${(accuracy * 100).toFixed(1)}%, Confidence: ${(confidence * 100).toFixed(1)}%, VOLaM: ${volamScore.toFixed(3)}`);
       } catch (error) {
-        console.error(`  ❌ Failed to evaluate question ${question.id}:`, error.message);
+        console.error(`  ❌ Failed to evaluate question ${question.id}:`, error instanceof Error ? error.message : String(error));
         
         // Add failed result
         results.push({

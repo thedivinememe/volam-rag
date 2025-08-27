@@ -12,7 +12,7 @@ interface Evidence {
   nullness: number;
   empathyFit: number;
   source: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 interface QueryResult {
