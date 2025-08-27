@@ -1,0 +1,29 @@
+# Global ownership
+* @thedivinememe
+
+# API backend
+/api/ @thedivinememe
+
+# UI frontend
+/ui/ @thedivinememe
+
+# Scripts and automation
+/scripts/ @thedivinememe
+/.github/ @thedivinememe
+/Makefile @thedivinememe
+
+# Data and evaluation
+/data/ @thedivinememe
+/reports/ @thedivinememe
+
+# Documentation
+/docs/ @thedivinememe
+/README.md @thedivinememe
+/.clinerules @thedivinememe
+
+# Configuration files
+/package.json @thedivinememe
+/tsconfig.json @thedivinememe
+/.gitignore @thedivinememe
+/.eslintrc* @thedivinememe
+/.prettierrc* @thedivinememe

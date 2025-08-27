@@ -1,0 +1,42 @@
+{
+  "name": "volam-rag",
+  "version": "1.0.0",
+  "description": "VOLaM-RAG: Evidence ranking with nullness tracking and empathy profiling",
+  "main": "index.js",
+  "scripts": {
+    "seed": "tsx scripts/seed.ts",
+    "eval:baseline": "tsx scripts/eval-baseline.ts",
+    "eval:volam": "tsx scripts/eval-volam.ts",
+    "setup": "tsx scripts/setup.ts",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "rag",
+    "evidence-ranking",
+    "nullness",
+    "empathy",
+    "vector-search"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0"
+  },
+  "dependencies": {
+    "faiss-node": "^0.5.0",
+    "sqlite3": "^5.1.0",
+    "chromadb": "^1.8.0",
+    "openai": "^4.0.0"
+  }
+}
