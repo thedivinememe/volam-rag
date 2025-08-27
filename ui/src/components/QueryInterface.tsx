@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 interface QueryInterfaceProps {
   onQuery: (
@@ -9,7 +9,7 @@ interface QueryInterfaceProps {
   loading: boolean;
 }
 
-export const QueryInterface: React.FC<QueryInterfaceProps> = ({ onQuery, loading }) => {
+export const QueryInterface = ({ onQuery, loading }: QueryInterfaceProps) => {
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<'baseline' | 'volam'>('volam');
   const [parameters, setParameters] = useState({
@@ -19,7 +19,7 @@ export const QueryInterface: React.FC<QueryInterfaceProps> = ({ onQuery, loading
     k: 5,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (query.trim()) {
       onQuery(query.trim(), mode, parameters);

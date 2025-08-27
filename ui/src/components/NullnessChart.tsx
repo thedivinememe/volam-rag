@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface NullnessDataPoint {
   timestamp: string;
@@ -7,7 +7,7 @@ interface NullnessDataPoint {
   confidence: number;
 }
 
-export const NullnessChart: React.FC = () => {
+export const NullnessChart = () => {
   const [nullnessHistory, setNullnessHistory] = useState<NullnessDataPoint[]>([]);
   const [selectedConcept, setSelectedConcept] = useState<string>('all');
   const [loading, setLoading] = useState(true);

@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface Evidence {
   id: string;
   content: string;
@@ -34,7 +32,7 @@ interface ResultsDisplayProps {
   results: QueryResult;
 }
 
-export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
+export const ResultsDisplay = ({ results }: ResultsDisplayProps) => {
   const formatScore = (score: number) => score.toFixed(3);
   const formatPercentage = (value: number) => `${(value * 100).toFixed(1)}%`;
 
