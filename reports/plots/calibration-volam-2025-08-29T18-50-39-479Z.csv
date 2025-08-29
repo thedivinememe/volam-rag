@@ -1,0 +1,2 @@
+bin_lower,bin_upper,avg_confidence,avg_accuracy,count,weight
+0.800,0.900,0.805,0.425,50,1.000

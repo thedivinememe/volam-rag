@@ -2,7 +2,7 @@
 
 /**
  * VOLaM evaluation script: Test VOLaM ranking algorithm
- * Usage: npm run eval-volam
+ * Usage: npm run eval-volam [--seed=<number>] [--mode=volam]
  */
 
 import axios from 'axios';
@@ -28,11 +28,32 @@ interface EvaluationResult {
   volamScore?: number;
   nullness?: number;
   empathyFit?: number;
+  correct: boolean;
+}
+
+interface JSONLResult {
+  questionId: string;
+  pred: number;
+  conf: number;
+  correct: boolean;
+  brier: number;
+  volamScore?: number;
+  nullness?: number;
+  empathyFit?: number;
 }
 
 class VOLaMEvaluator {
   private apiUrl = 'http://localhost:8000';
   private resultsDir = path.join(process.cwd(), 'reports');
+  private seed: number;
+  private mode: string;
+
+  constructor(seed?: number, mode: string = 'volam') {
+    this.seed = seed || Math.floor(Math.random() * 10000);
+    this.mode = mode;
+    console.log(`🎲 Using seed: ${this.seed}`);
+    console.log(`🔧 Using mode: ${this.mode}`);
+  }
 
   async run(): Promise<void> {
     console.log('🚀 Starting VOLaM evaluation...');
@@ -131,7 +152,8 @@ class VOLaMEvaluator {
           topEvidence: evidence,
           volamScore,
           nullness,
-          empathyFit
+          empathyFit,
+          correct: accuracy >= 0.5
         });
 
         console.log(`  ✓ Accuracy: ${(accuracy * 100).toFixed(1)}%, Confidence: ${(confidence * 100).toFixed(1)}%, VOLaM: ${volamScore.toFixed(3)}`);
@@ -150,7 +172,8 @@ class VOLaMEvaluator {
           topEvidence: [],
           volamScore: 0,
           nullness: 1,
-          empathyFit: 0
+          empathyFit: 0,
+          correct: false
         });
       }
     }
@@ -226,18 +249,74 @@ class VOLaMEvaluator {
 
   private async saveResults(mode: string, results: EvaluationResult[], metrics: any): Promise<void> {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `${mode}-evaluation-${timestamp}.json`;
-    const filepath = path.join(this.resultsDir, filename);
-
+    
+    // Save JSON format
+    const jsonFilename = `${mode}-evaluation-${timestamp}.json`;
+    const jsonFilepath = path.join(this.resultsDir, jsonFilename);
     const report = {
       mode,
       metrics,
       results,
+      seed: this.seed,
       generatedAt: new Date().toISOString()
     };
+    await fs.writeFile(jsonFilepath, JSON.stringify(report, null, 2));
+    console.log(`💾 JSON results saved to: ${jsonFilename}`);
 
-    await fs.writeFile(filepath, JSON.stringify(report, null, 2));
-    console.log(`💾 Results saved to: ${filename}`);
+    // Save JSONL format
+    const jsonlFilename = `${mode}-evaluation-${timestamp}.jsonl`;
+    const jsonlFilepath = path.join(this.resultsDir, jsonlFilename);
+    const jsonlResults: JSONLResult[] = results.map(r => ({
+      questionId: r.questionId,
+      pred: r.accuracy,
+      conf: r.confidence,
+      correct: r.correct,
+      brier: r.brierScore,
+      volamScore: r.volamScore,
+      nullness: r.nullness,
+      empathyFit: r.empathyFit
+    }));
+    const jsonlContent = jsonlResults.map(r => JSON.stringify(r)).join('\n');
+    await fs.writeFile(jsonlFilepath, jsonlContent);
+    console.log(`💾 JSONL results saved to: ${jsonlFilename}`);
+
+    // Save Markdown summary
+    const summaryFilename = `${mode}-summary-${timestamp}.md`;
+    const summaryFilepath = path.join(this.resultsDir, summaryFilename);
+    const summaryContent = this.generateSummaryTable(mode, metrics, results);
+    await fs.writeFile(summaryFilepath, summaryContent);
+    console.log(`💾 Summary saved to: ${summaryFilename}`);
+  }
+
+  private generateSummaryTable(mode: string, metrics: any, results: EvaluationResult[]): string {
+    const lines = [
+      `# ${mode.toUpperCase()} Evaluation Summary`,
+      `Generated: ${new Date().toISOString()}`,
+      `Seed: ${this.seed}`,
+      '',
+      '## Overall Metrics',
+      '',
+      `| Metric | Value |`,
+      `|--------|-------|`,
+      `| Total Questions | ${metrics.totalQuestions} |`,
+      `| Accuracy | ${(metrics.accuracy * 100).toFixed(1)}% |`,
+      `| Brier Score | ${metrics.brierScore.toFixed(3)} |`,
+      `| ECE | ${metrics.ece.toFixed(3)} |`,
+      `| VOLaM Score | ${metrics.volamScore.toFixed(3)} |`,
+      `| Nullness | ${metrics.nullness.toFixed(3)} |`,
+      `| Empathy Fit | ${metrics.empathyFit.toFixed(3)} |`,
+      '',
+      '## Per-Question Results',
+      '',
+      '| Question ID | Accuracy | Confidence | Brier | VOLaM | Nullness | Empathy |',
+      '|-------------|----------|------------|-------|-------|----------|---------|'
+    ];
+
+    results.forEach(r => {
+      lines.push(`| ${r.questionId} | ${(r.accuracy * 100).toFixed(1)}% | ${(r.confidence * 100).toFixed(1)}% | ${r.brierScore.toFixed(3)} | ${(r.volamScore || 0).toFixed(3)} | ${(r.nullness || 0).toFixed(3)} | ${(r.empathyFit || 0).toFixed(3)} |`);
+    });
+
+    return lines.join('\n');
   }
 
   private async generateComparisonReport(): Promise<void> {
@@ -346,6 +425,28 @@ class VOLaMEvaluator {
   }
 }
 
+// Parse command line arguments
+function parseArgs(): { seed?: number; mode: string } {
+  const args = process.argv.slice(2);
+  let seed: number | undefined;
+  let mode = 'volam';
+
+  for (const arg of args) {
+    if (arg.startsWith('--seed=')) {
+      seed = parseInt(arg.split('=')[1], 10);
+      if (isNaN(seed)) {
+        console.error('❌ Invalid seed value. Must be a number.');
+        process.exit(1);
+      }
+    } else if (arg.startsWith('--mode=')) {
+      mode = arg.split('=')[1];
+    }
+  }
+
+  return { seed, mode };
+}
+
 // Run the VOLaM evaluation
-const evaluator = new VOLaMEvaluator();
+const { seed, mode } = parseArgs();
+const evaluator = new VOLaMEvaluator(seed, mode);
 evaluator.run();

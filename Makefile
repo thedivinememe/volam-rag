@@ -1,19 +1,22 @@
 # VOLaM-RAG Makefile
 # Canonical commands from .clinerules
 
-.PHONY: setup seed api ui eval-baseline eval-volam validate-qa clean help
+.PHONY: setup seed api ui eval-baseline eval-baseline-seed eval-volam eval-volam-seed plots-calibration validate-qa clean help
 
 # Default target
 help:
 	@echo "VOLaM-RAG Project Commands:"
-	@echo "  make setup        - Install dependencies for all components"
-	@echo "  make seed         - Chunk documents and generate embeddings"
-	@echo "  make api          - Start the backend API server"
-	@echo "  make ui           - Start the frontend development server"
-	@echo "  make eval-baseline - Run baseline cosine-only evaluation"
-	@echo "  make eval-volam   - Run VOLaM algorithm evaluation"
-	@echo "  make validate-qa  - Validate Q/A dataset against schema"
-	@echo "  make clean        - Clean build artifacts and node_modules"
+	@echo "  make setup            - Install dependencies for all components"
+	@echo "  make seed             - Chunk documents and generate embeddings"
+	@echo "  make api              - Start the backend API server"
+	@echo "  make ui               - Start the frontend development server"
+	@echo "  make eval-baseline    - Run baseline cosine-only evaluation"
+	@echo "  make eval-baseline-seed - Run baseline evaluation with seed=42"
+	@echo "  make eval-volam       - Run VOLaM algorithm evaluation"
+	@echo "  make eval-volam-seed  - Run VOLaM evaluation with seed=42"
+	@echo "  make plots-calibration - Generate calibration plots"
+	@echo "  make validate-qa      - Validate Q/A dataset against schema"
+	@echo "  make clean            - Clean build artifacts and node_modules"
 
 # Install dependencies for all components
 setup:
@@ -54,6 +57,16 @@ eval-baseline-seed:
 eval-volam:
 	@echo "Running VOLaM evaluation..."
 	npm run eval:volam
+
+# Run VOLaM evaluation with deterministic seed
+eval-volam-seed:
+	@echo "Running VOLaM evaluation with seed=42..."
+	npm run eval:volam:seed
+
+# Generate calibration plots
+plots-calibration:
+	@echo "Generating calibration plots..."
+	npm run plots:calibration
 
 # Validate Q/A dataset against schema
 validate-qa:
