@@ -1,7 +1,7 @@
 # VOLaM-RAG Makefile
 # Canonical commands from .clinerules
 
-.PHONY: setup seed api ui eval-baseline eval-volam clean help
+.PHONY: setup seed api ui eval-baseline eval-volam validate-qa clean help
 
 # Default target
 help:
@@ -12,6 +12,7 @@ help:
 	@echo "  make ui           - Start the frontend development server"
 	@echo "  make eval-baseline - Run baseline cosine-only evaluation"
 	@echo "  make eval-volam   - Run VOLaM algorithm evaluation"
+	@echo "  make validate-qa  - Validate Q/A dataset against schema"
 	@echo "  make clean        - Clean build artifacts and node_modules"
 
 # Install dependencies for all components
@@ -48,6 +49,11 @@ eval-baseline:
 eval-volam:
 	@echo "Running VOLaM evaluation..."
 	npm run eval:volam
+
+# Validate Q/A dataset against schema
+validate-qa:
+	@echo "Validating Q/A dataset..."
+	npm run validate:qa
 
 # Clean build artifacts and dependencies
 clean:

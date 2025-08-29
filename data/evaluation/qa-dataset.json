@@ -1,0 +1,2279 @@
+{
+  "metadata": {
+    "version": "0.1.0",
+    "created": "2025-08-29T11:14:00Z",
+    "description": "VOLaM-RAG evaluation dataset with 50 Q/A items across hotel, web-dev, and null/not-null domains",
+    "totalQuestions": 50,
+    "domainDistribution": {
+      "hotel": 20,
+      "web-dev": 20,
+      "null-not-null": 10
+    }
+  },
+  "questions": [
+    {
+      "id": "hotel-001",
+      "domain": "hotel",
+      "question": "What are the key principles of service recovery in hospitality, and why is it important for guest loyalty?",
+      "expectedAnswer": "Service recovery transforms negative experiences into positive outcomes through effective problem-solving and guest relationship management. The service recovery paradox suggests that guests who experience problems that are resolved exceptionally well may become more loyal than those who never experienced problems. Key principles include swift response, sincere apologies, taking ownership, collaborative problem-solving, and appropriate compensation. This is important for guest loyalty because it demonstrates the organization's commitment to guest satisfaction and can turn dissatisfied guests into loyal advocates.",
+      "citations": [
+        {
+          "sourceFile": "hotel/customer-service-excellence.txt",
+          "relevantText": "Service recovery transforms negative experiences into positive outcomes through effective problem-solving and guest relationship management. The service recovery paradox suggests that guests who experience problems that are resolved exceptionally well may become more loyal than those who never experienced problems at all.",
+          "context": "This explains the fundamental concept and importance of service recovery"
+        },
+        {
+          "sourceFile": "hotel/customer-service-excellence.txt",
+          "relevantText": "Problem resolution procedures should be swift, fair, and focused on guest satisfaction rather than organizational convenience. Staff should be trained to apologize sincerely, take ownership of problems, and work collaboratively with guests to find acceptable solutions.",
+          "context": "This outlines the key procedural principles of effective service recovery"
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "service recovery",
+            "paradox",
+            "loyalty",
+            "problem-solving",
+            "ownership",
+            "swift response"
+          ],
+          "concepts": [
+            "service recovery paradox",
+            "transformation of negative to positive",
+            "guest loyalty impact",
+            "procedural principles"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "recovery",
+            "problems",
+            "guests",
+            "satisfaction",
+            "resolve"
+          ],
+          "concepts": [
+            "basic problem resolution",
+            "guest satisfaction focus"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer does not mention service recovery, problem resolution, or guest loyalty concepts"
+        }
+      }
+    },
+    {
+      "id": "hotel-002",
+      "domain": "hotel",
+      "question": "How should hospitality staff handle cultural differences when serving international guests?",
+      "expectedAnswer": "Staff should receive cultural awareness training to understand and respect diverse guest backgrounds, customs, and expectations. Different cultures have varying communication styles, service preferences, and social norms. Staff should adapt their service approach while maintaining professional standards, provide language support services, accommodate cultural dietary restrictions and religious observances, and practice inclusive service delivery that ensures all guests feel welcome regardless of their background.",
+      "citations": [
+        {
+          "sourceFile": "hotel/customer-service-excellence.txt",
+          "relevantText": "Cultural awareness training helps staff understand and respect diverse guest backgrounds, customs, and expectations. Different cultures have varying communication styles, service preferences, and social norms that affect guest interactions.",
+          "context": "This establishes the foundation for cultural sensitivity in hospitality"
+        },
+        {
+          "sourceFile": "hotel/customer-service-excellence.txt",
+          "relevantText": "Language support services, including multilingual staff and translation tools, enhance communication with international guests. Cultural dietary restrictions and religious observances require understanding and accommodation.",
+          "context": "This provides specific examples of cultural accommodation practices"
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "cultural awareness",
+            "training",
+            "communication styles",
+            "accommodation",
+            "inclusive service",
+            "language support"
+          ],
+          "concepts": [
+            "cultural sensitivity training",
+            "adaptation of service approach",
+            "specific accommodations",
+            "inclusive practices"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "cultural",
+            "international",
+            "different",
+            "respect",
+            "accommodate"
+          ],
+          "concepts": [
+            "basic cultural awareness",
+            "need for accommodation"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer does not address cultural differences, international guests, or accommodation strategies"
+        }
+      }
+    },
+    {
+      "id": "web-dev-001",
+      "domain": "web-dev",
+      "question": "What are the key principles of component-based architecture in modern frontend development?",
+      "expectedAnswer": "Component-based architecture promotes reusability, maintainability, and scalability through components that follow single responsibility principle, have clear interfaces, and minimal coupling. Each component should encapsulate its own state and behavior while exposing a clean API for interaction. Key principles include component composition for building complex UIs from simple building blocks, proper state management (local vs global), and sharing logic through patterns like higher-order components, render props, or custom hooks.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/advanced-frontend-architecture.txt",
+          "relevantText": "Component-based architectures that promote reusability, maintainability, and scalability. Component design principles include single responsibility, clear interfaces, and minimal coupling between components. Each component should encapsulate its own state and behavior while exposing a clean API for interaction with parent components.",
+          "context": "This defines the core principles of component-based architecture"
+        },
+        {
+          "sourceFile": "web-dev/advanced-frontend-architecture.txt",
+          "relevantText": "Component composition patterns enable building complex user interfaces from simple, reusable building blocks. Higher-order components and render props provide mechanisms for sharing logic between components without inheritance.",
+          "context": "This explains composition patterns and logic sharing mechanisms"
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "component-based",
+            "reusability",
+            "maintainability",
+            "scalability",
+            "single responsibility",
+            "encapsulation",
+            "composition"
+          ],
+          "concepts": [
+            "component design principles",
+            "state encapsulation",
+            "composition patterns",
+            "logic sharing mechanisms"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "components",
+            "reusable",
+            "modular",
+            "interfaces",
+            "state"
+          ],
+          "concepts": [
+            "basic component concepts",
+            "modularity benefits"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer does not mention components, architecture principles, or frontend development concepts"
+        }
+      }
+    },
+    {
+      "id": "web-dev-002",
+      "domain": "web-dev",
+      "question": "What are the main strategies for optimizing frontend performance in modern web applications?",
+      "expectedAnswer": "Frontend performance optimization includes code splitting to reduce initial bundle sizes by loading components on demand, memoization strategies to prevent unnecessary re-renders using React.memo and hooks like useMemo and useCallback, virtual scrolling for handling large datasets efficiently, build system optimizations like tree shaking and minification, asset optimization including image compression and CSS optimization, and caching strategies at multiple levels including browser caching and CDNs.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/advanced-frontend-architecture.txt",
+          "relevantText": "Code splitting techniques reduce initial bundle sizes by loading components and features on demand. Dynamic imports enable lazy loading of routes and heavy components, improving initial page load times.",
+          "context": "This explains code splitting as a key performance optimization technique"
+        },
+        {
+          "sourceFile": "web-dev/advanced-frontend-architecture.txt",
+          "relevantText": "Memoization strategies prevent unnecessary re-renders by caching component outputs and expensive calculations. React.memo, useMemo, and useCallback provide different levels of optimization for functional components.",
+          "context": "This covers memoization strategies for preventing unnecessary re-renders"
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "code splitting",
+            "memoization",
+            "lazy loading",
+            "tree shaking",
+            "minification",
+            "caching",
+            "virtual scrolling"
+          ],
+          "concepts": [
+            "bundle size optimization",
+            "render optimization",
+            "asset optimization",
+            "caching strategies"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "performance",
+            "optimization",
+            "loading",
+            "caching",
+            "compression"
+          ],
+          "concepts": [
+            "basic performance awareness",
+            "some optimization techniques"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer does not mention performance optimization techniques or frontend development concepts"
+        }
+      }
+    },
+    {
+      "id": "nn-001",
+      "domain": "null-not-null",
+      "question": "What is nullness in the context of Null/Not-Null Logic, and how does it relate to uncertainty and knowledge representation?",
+      "expectedAnswer": "Nullness is a measurable quantity n ∈ [0,1] where 0 represents complete certainty and 1 represents maximum uncertainty. It provides a framework for explicitly representing and managing uncertainty in knowledge systems. Nullness values reflect the evolving nature of knowledge and understanding, with temporal dynamics that change based on information acquisition, validation processes, and contextual changes. This differs from traditional binary null/not-null representations by providing a continuous measure of uncertainty that can be incorporated into decision-making processes.",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/foundational-axioms.txt",
+          "relevantText": "Nullness represents the degree of uncertainty or incompleteness in information, ranging from 0 (complete certainty) to 1 (complete uncertainty). This continuous measure allows for nuanced representation of knowledge states that binary true/false or null/not-null systems cannot capture.",
+          "context": "This defines the basic concept of nullness as a continuous uncertainty measure"
+        },
+        {
+          "sourceFile": "null-not-null/advanced-nullness-dynamics.txt",
+          "relevantText": "Nullness values exhibit complex temporal dynamics that reflect the evolving nature of knowledge and understanding within specific domains. The temporal evolution of nullness follows predictable patterns based on information acquisition, validation processes, and contextual changes.",
+          "context": "This explains the temporal and dynamic aspects of nullness"
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "nullness",
+            "uncertainty",
+            "continuous measure",
+            "0 to 1",
+            "knowledge representation",
+            "temporal dynamics"
+          ],
+          "concepts": [
+            "nullness as uncertainty measure",
+            "continuous vs binary representation",
+            "temporal evolution",
+            "knowledge state representation"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "uncertainty",
+            "measure",
+            "knowledge",
+            "information",
+            "null"
+          ],
+          "concepts": [
+            "basic uncertainty concepts",
+            "information representation"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer does not mention nullness, uncertainty measurement, or knowledge representation concepts"
+        }
+      }
+    },
+    {
+      "id": "hotel-003",
+      "domain": "hotel",
+      "question": "What is a typical hotel cancellation policy window and how are no-shows handled?",
+      "expectedAnswer": "Most limited-service hotels offer a 24–48 hour cancellation window before the scheduled arrival to avoid charges. No-shows are commonly charged one night plus tax under the rate’s terms. Exceptions may apply for advance purchase or special-event rates that are nonrefundable. Clear communication and reminder emails help reduce no-shows and guest disputes.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/cancellation-policy.txt",
+          "relevantText": "Standard flexible rates permit cancellation up to 24–48 hours prior to arrival without penalty; no-shows may incur a one-night room and tax charge.",
+          "context": "Defines common cancellation window and no-show handling."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "cancellation window",
+            "no-show",
+            "one night charge",
+            "advance purchase",
+            "nonrefundable",
+            "flexible rate"
+          ],
+          "concepts": [
+            "standard windows",
+            "no-show handling",
+            "rate exceptions"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "cancellation window",
+            "flexible rate"
+          ],
+          "concepts": [
+            "standard windows"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-004",
+      "domain": "hotel",
+      "question": "What is the minimum check-in age and why does it vary by property?",
+      "expectedAnswer": "Many properties set a minimum check-in age between 18 and 21 due to insurance, local law, and risk management considerations. Resorts or urban hotels may require 21, while family-focused or suburban properties may allow 18. Policies should be documented, consistently enforced, and communicated during booking.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/check-in-age.txt",
+          "relevantText": "Minimum check-in age typically ranges from 18–21 depending on jurisdiction and property risk profile; policy must be disclosed during booking.",
+          "context": "Explains rationale and communication needs."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "check-in age",
+            "policy",
+            "insurance",
+            "local law",
+            "risk management",
+            "communication"
+          ],
+          "concepts": [
+            "age requirements",
+            "variability by property",
+            "disclosure"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "check-in age",
+            "communication"
+          ],
+          "concepts": [
+            "age requirements"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-005",
+      "domain": "hotel",
+      "question": "How do incidental holds (preauthorizations) on credit cards work at check-in?",
+      "expectedAnswer": "At check-in, hotels commonly place a temporary hold on a guest’s card to cover estimated incidentals and potential damages. The amount varies by property and length of stay. Holds reduce the available credit but are released by the issuer after checkout when final charges post; timelines depend on the bank.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/incidental-holds.txt",
+          "relevantText": "An authorization hold is placed for incidentals; it reduces available credit and is released after final settlement post-checkout.",
+          "context": "Describes mechanics and timing of holds."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "incidental hold",
+            "preauthorization",
+            "available credit",
+            "release timeline",
+            "final settlement"
+          ],
+          "concepts": [
+            "authorization mechanics",
+            "bank timelines",
+            "estimation policy"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "incidental hold",
+            "final settlement"
+          ],
+          "concepts": [
+            "authorization mechanics"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-006",
+      "domain": "hotel",
+      "question": "What are typical payment methods and deposit rules at check-in?",
+      "expectedAnswer": "Properties usually accept major credit/debit cards and may accept cash with a refundable deposit. Debit cards behave like cash regarding holds, immediately reducing available funds. For cash payments, front desk collects a deposit to cover incidentals and returns any unused amount at checkout after room inspection.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/payment-methods.txt",
+          "relevantText": "Hotels accept card payments; debit holds immediately impact funds; cash stays may require a refundable deposit for incidentals.",
+          "context": "Covers accepted methods and deposits."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "payment methods",
+            "debit holds",
+            "cash deposit",
+            "refund at checkout",
+            "incidentals"
+          ],
+          "concepts": [
+            "accepted tenders",
+            "deposit rationale",
+            "refund process"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "payment methods",
+            "incidentals"
+          ],
+          "concepts": [
+            "accepted tenders"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-007",
+      "domain": "hotel",
+      "question": "How should a hotel manage ADA/accessible room inventory and requests?",
+      "expectedAnswer": "Compliance requires reserving accessible room types and honoring specific feature requests (e.g., roll-in shower) when available. Systems should accurately map accessibility attributes to room types; if an accessible room is oversold, relocate the guest at no extra cost and coordinate transportation if necessary.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/accessibility-rooms.txt",
+          "relevantText": "Accessible room features must be guaranteed when booked; in case of oversell, comparable or better accommodation and assistance are provided without extra cost.",
+          "context": "Guarantee and oversell remediation."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "accessible room",
+            "ADA",
+            "roll-in shower",
+            "guarantee",
+            "oversell remediation"
+          ],
+          "concepts": [
+            "feature mapping",
+            "guest relocation",
+            "compliance duties"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "accessible room",
+            "oversell remediation"
+          ],
+          "concepts": [
+            "feature mapping"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-008",
+      "domain": "hotel",
+      "question": "What is a standard pet policy and associated fees?",
+      "expectedAnswer": "Pet-friendly hotels specify allowed species (often dogs), size/number limits, designated rooms, and a nonrefundable cleaning fee. Service animals are not pets and are accommodated without pet fees in jurisdictions where applicable. Policies aim to balance cleanliness, allergy concerns, and guest demand.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/pet-policy.txt",
+          "relevantText": "Typical pet policies define species and size limits, designated rooms, and cleaning fees; service animals are exempt from pet fees.",
+          "context": "Outlines typical components and exemptions."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "pet policy",
+            "cleaning fee",
+            "service animals",
+            "size limits",
+            "designated rooms"
+          ],
+          "concepts": [
+            "species limits",
+            "fee rationale",
+            "exemptions"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "pet policy",
+            "designated rooms"
+          ],
+          "concepts": [
+            "species limits"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-009",
+      "domain": "hotel",
+      "question": "How are smoking policies enforced and what are the penalties?",
+      "expectedAnswer": "Most modern hotels are 100% smoke-free, including vaping. Violations may incur a cleaning fee and possible eviction under house rules. Enforcement relies on signage, guest acknowledgment at check-in, and room inspections when odor or evidence is detected.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/smoking-policy.txt",
+          "relevantText": "Smoke-free policies cover rooms and indoor areas; violations result in a cleaning fee and potential eviction per the house rules.",
+          "context": "Defines scope, enforcement, and penalties."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "smoke-free",
+            "vaping",
+            "cleaning fee",
+            "house rules",
+            "eviction"
+          ],
+          "concepts": [
+            "scope of policy",
+            "enforcement cues",
+            "penalties"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "smoke-free",
+            "eviction"
+          ],
+          "concepts": [
+            "scope of policy"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-010",
+      "domain": "hotel",
+      "question": "What is late checkout and how should it be prioritized?",
+      "expectedAnswer": "Late checkout extends departure time subject to availability. Front desk prioritizes loyalty status, operational constraints (housekeeping schedules), and revenue considerations. Clearly communicate any fees or time limits and record approvals to avoid miscommunication.",
+      "citations": [
+        {
+          "sourceFile": "hotel/operations/late-checkout.txt",
+          "relevantText": "Late checkout is granted based on availability, loyalty tier, and operational needs; fees and deadlines should be disclosed.",
+          "context": "Criteria and communication."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "late checkout",
+            "availability",
+            "loyalty status",
+            "housekeeping",
+            "fees"
+          ],
+          "concepts": [
+            "prioritization",
+            "operational constraints",
+            "clear disclosure"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "late checkout",
+            "fees"
+          ],
+          "concepts": [
+            "prioritization"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-011",
+      "domain": "hotel",
+      "question": "How do early check-in requests get handled?",
+      "expectedAnswer": "Early check-in depends on room readiness and occupancy. Strategies include pre-blocking, upselling available ready room types, or offering luggage storage until standard time. Communicate transparently and avoid promising early access unless confirmed.",
+      "citations": [
+        {
+          "sourceFile": "hotel/operations/early-checkin.txt",
+          "relevantText": "Early check-in is subject to room readiness; options include pre-blocking, upsell to ready rooms, or luggage storage.",
+          "context": "Outlines handling strategies."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "early check-in",
+            "room readiness",
+            "occupancy",
+            "pre-blocking",
+            "upsell"
+          ],
+          "concepts": [
+            "availability dependence",
+            "alternatives",
+            "communication"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "early check-in",
+            "upsell"
+          ],
+          "concepts": [
+            "availability dependence"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-012",
+      "domain": "hotel",
+      "question": "What is an overbooking strategy and guest relocation protocol?",
+      "expectedAnswer": "Overbooking offsets expected no-shows and cancellations. When walk situations occur, relocate guests to a comparable or better nearby property, cover transportation, and honor the original rate. Maintain goodwill with clear apologies and follow-up.",
+      "citations": [
+        {
+          "sourceFile": "hotel/revenue/overbooking-strategy.txt",
+          "relevantText": "Overbooking anticipates no-shows; relocation must be to comparable or better property with transport and rate honored.",
+          "context": "Revenue tactic and guest care protocol."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "overbooking",
+            "walk guest",
+            "relocation",
+            "comparable property",
+            "transportation",
+            "rate honored"
+          ],
+          "concepts": [
+            "no-show forecasting",
+            "guest care",
+            "follow-up"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "overbooking",
+            "rate honored"
+          ],
+          "concepts": [
+            "no-show forecasting"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-013",
+      "domain": "hotel",
+      "question": "How should third‑party (OTA) reservations be handled at check-in?",
+      "expectedAnswer": "Verify identification and payment method; note that virtual cards may be used by OTAs. Changes and cancellations must go through the original channel. Any upsell or incidentals require a valid personal card on file.",
+      "citations": [
+        {
+          "sourceFile": "hotel/operations/ota-handling.txt",
+          "relevantText": "OTA bookings often use virtual cards; modifications must be processed by the OTA; collect personal card for incidentals.",
+          "context": "Handling constraints and payment nuances."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "OTA",
+            "virtual card",
+            "modifications",
+            "incidentals",
+            "channel policy"
+          ],
+          "concepts": [
+            "payment verification",
+            "policy routing",
+            "upsell constraints"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "OTA",
+            "channel policy"
+          ],
+          "concepts": [
+            "payment verification"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-014",
+      "domain": "hotel",
+      "question": "What is the typical no‑noise/quiet hours policy?",
+      "expectedAnswer": "Quiet hours (often 10pm–7am) minimize disturbances. Enforcement uses warnings escalating to eviction if repeated violations occur. Document complaints and resolutions for liability and pattern detection.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/quiet-hours.txt",
+          "relevantText": "Quiet hours define low-noise periods; repeated violations may lead to eviction; documentation is required.",
+          "context": "Policy definition and enforcement."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "quiet hours",
+            "noise complaints",
+            "eviction",
+            "documentation",
+            "warnings"
+          ],
+          "concepts": [
+            "disturbance control",
+            "escalation path",
+            "records"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "quiet hours",
+            "warnings"
+          ],
+          "concepts": [
+            "disturbance control"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-015",
+      "domain": "hotel",
+      "question": "How are room type guarantees and upgrades managed?",
+      "expectedAnswer": "When a specific room type is confirmed, the hotel should honor it; if unavailable, offer an upgrade or compensation. Loyalty members may receive complimentary upgrades based on availability and tier benefits.",
+      "citations": [
+        {
+          "sourceFile": "hotel/operations/room-type-guarantee.txt",
+          "relevantText": "Confirmed room types should be honored; otherwise, provide an upgrade or compensation; loyalty tiers influence upgrades.",
+          "context": "Guarantees and upgrade logic."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "room type",
+            "guarantee",
+            "upgrade",
+            "compensation",
+            "loyalty tier"
+          ],
+          "concepts": [
+            "honor confirmations",
+            "alternatives",
+            "tier benefits"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "room type",
+            "loyalty tier"
+          ],
+          "concepts": [
+            "honor confirmations"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-016",
+      "domain": "hotel",
+      "question": "What are standard housekeeping service schedules and opt‑out programs?",
+      "expectedAnswer": "Daily housekeeping may be standard, with opt-out or ‘green choice’ programs for environmental reasons. Requests for linens, amenities, or service frequency should be honored within operational limits and documented.",
+      "citations": [
+        {
+          "sourceFile": "hotel/operations/housekeeping-schedule.txt",
+          "relevantText": "Housekeeping frequency can be daily or opt-out; guest requests for supplies and timing should be accommodated when feasible.",
+          "context": "Service frequency and options."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "housekeeping",
+            "opt-out",
+            "green choice",
+            "linens",
+            "amenities",
+            "frequency"
+          ],
+          "concepts": [
+            "environmental programs",
+            "guest requests",
+            "documentation"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "housekeeping",
+            "frequency"
+          ],
+          "concepts": [
+            "environmental programs"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-017",
+      "domain": "hotel",
+      "question": "How are parking policies and fees typically structured?",
+      "expectedAnswer": "Policies specify on-site vs. off-site parking, rates, and whether self or valet is available. Accessible parking and EV charging should be noted where available. Fees and terms are disclosed during booking and at check-in.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/parking-policy.txt",
+          "relevantText": "Parking policies define availability (self/valet), rates, accessible spaces, and EV charging; disclose fees clearly.",
+          "context": "Components and disclosure."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "parking",
+            "self vs valet",
+            "rates",
+            "accessible",
+            "EV charging",
+            "disclosure"
+          ],
+          "concepts": [
+            "availability",
+            "fee transparency",
+            "amenities"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "parking",
+            "disclosure"
+          ],
+          "concepts": [
+            "availability"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-018",
+      "domain": "hotel",
+      "question": "How are resort fees or facility fees communicated and applied?",
+      "expectedAnswer": "Resort/facility fees cover bundled amenities (e.g., Wi‑Fi, pool, fitness). They must be disclosed pre-booking and at check-in to avoid surprise charges. Exemptions or waivers may apply for elite members or service failures.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/resort-fees.txt",
+          "relevantText": "Resort or facility fees bundle amenities and require clear pre-booking disclosure; waivers can be considered in service recovery.",
+          "context": "Fee nature and transparency."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "resort fee",
+            "facility fee",
+            "bundled amenities",
+            "disclosure",
+            "waiver"
+          ],
+          "concepts": [
+            "transparency",
+            "amenity coverage",
+            "service recovery links"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "resort fee",
+            "waiver"
+          ],
+          "concepts": [
+            "transparency"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-019",
+      "domain": "hotel",
+      "question": "What is a standard lost-and-found process?",
+      "expectedAnswer": "Catalog items with date/location, secure storage, and attempt to contact identified owners. Disposition timelines depend on value and local policy. Hygiene and safety rules apply when handling personal items.",
+      "citations": [
+        {
+          "sourceFile": "hotel/operations/lost-and-found.txt",
+          "relevantText": "Lost items are logged with details, stored securely, and owners contacted when possible; retention and disposition follow policy.",
+          "context": "Procedure overview."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "lost and found",
+            "catalog",
+            "secure storage",
+            "retention",
+            "disposition"
+          ],
+          "concepts": [
+            "owner contact",
+            "hygiene/safety",
+            "policy timelines"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "lost and found",
+            "disposition"
+          ],
+          "concepts": [
+            "owner contact"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "hotel-020",
+      "domain": "hotel",
+      "question": "How are government or military rates verified and applied?",
+      "expectedAnswer": "Eligible guests provide ID at check-in to receive contracted rates. Blackout dates or limited room types may apply. Policies should be consistent and auditable to maintain rate integrity with partners.",
+      "citations": [
+        {
+          "sourceFile": "hotel/policies/gov-military-rates.txt",
+          "relevantText": "Government/military rates require eligibility verification; restrictions and blackout dates may apply; maintain audit trails.",
+          "context": "Eligibility and integrity controls."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "government rate",
+            "military",
+            "eligibility",
+            "blackout dates",
+            "audit"
+          ],
+          "concepts": [
+            "verification",
+            "rate integrity",
+            "restrictions"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "government rate",
+            "audit"
+          ],
+          "concepts": [
+            "verification"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-003",
+      "domain": "web-dev",
+      "question": "Compare CSR, SSR, and SSG for React apps—when would you choose each?",
+      "expectedAnswer": "CSR (client-side rendering) prioritizes interactivity and low server cost but trades initial TTI. SSR improves first paint and SEO by serving HTML on request; it suits dynamic, personalized pages. SSG pre-renders at build time for maximum performance and cost efficiency on mostly static content; use revalidation for freshness.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/rendering-strategies.txt",
+          "relevantText": "CSR emphasizes client interactivity, SSR serves HTML per request improving SEO and TTFB, and SSG pre-renders at build time; choose based on dynamism and freshness needs.",
+          "context": "Trade-offs across rendering modes."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "CSR",
+            "SSR",
+            "SSG",
+            "SEO",
+            "TTFB",
+            "revalidation"
+          ],
+          "concepts": [
+            "rendering trade-offs",
+            "when to use which",
+            "freshness vs cost"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "CSR",
+            "revalidation"
+          ],
+          "concepts": [
+            "rendering trade-offs"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-004",
+      "domain": "web-dev",
+      "question": "How does hydration work in React/Next.js and what are common pitfalls?",
+      "expectedAnswer": "Hydration attaches event listeners to server-rendered markup. Mismatches between server and client trees cause warnings and lost interactivity. Avoid non-deterministic rendering on the server (e.g., Date.now, random), and gate browser-only code behind effects or dynamic import with no SSR.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/rendering-strategies.txt",
+          "relevantText": "Hydration reconciles server HTML with client tree; mismatches arise from non-deterministic output or browser-only APIs on the server.",
+          "context": "Mechanics and pitfalls."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "hydration",
+            "mismatch",
+            "deterministic",
+            "dynamic import",
+            "no SSR"
+          ],
+          "concepts": [
+            "attach listeners",
+            "avoid divergence",
+            "guard browser APIs"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "hydration",
+            "no SSR"
+          ],
+          "concepts": [
+            "attach listeners"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-005",
+      "domain": "web-dev",
+      "question": "What are effective global vs local state management patterns?",
+      "expectedAnswer": "Keep most state local to components; lift only when multiple consumers need it. For global state, use context/reducer or libraries (Zustand/Redux) for cross-cutting concerns. Derive data instead of duplicating; co-locate mutations; treat server cache (React Query) as its own layer.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/state-management.txt",
+          "relevantText": "Prefer local state; promote to global when shared; use context or state libraries; separate server cache from UI state.",
+          "context": "Guidelines for scoping state."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "local state",
+            "global state",
+            "context",
+            "Redux",
+            "Zustand",
+            "React Query"
+          ],
+          "concepts": [
+            "scope wisely",
+            "derive data",
+            "avoid duplication"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "local state",
+            "React Query"
+          ],
+          "concepts": [
+            "scope wisely"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-006",
+      "domain": "web-dev",
+      "question": "Explain memoization tools in React and when to use them.",
+      "expectedAnswer": "Use React.memo for pure components, useMemo for expensive computations, and useCallback for stable function identities passed to children. Apply them based on profiling; premature memoization can add overhead and obscure bugs.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/performance-optimizations.txt",
+          "relevantText": "React.memo, useMemo, and useCallback reduce redundant work; profile before adding—memoization can add complexity.",
+          "context": "Memoization toolbox and caution."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "React.memo",
+            "useMemo",
+            "useCallback",
+            "profiling",
+            "overhead"
+          ],
+          "concepts": [
+            "when to memoize",
+            "trade-offs",
+            "pure components"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "React.memo",
+            "overhead"
+          ],
+          "concepts": [
+            "when to memoize"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-007",
+      "domain": "web-dev",
+      "question": "What’s tree shaking and how do you maximize its benefits?",
+      "expectedAnswer": "Tree shaking removes unused exports during bundling. Use ES modules, avoid dynamic requires, and prefer per-module imports to enable dead-code elimination. Keep side effects explicit via `package.json` sideEffects field.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/build-optimization.txt",
+          "relevantText": "Tree shaking relies on static ES module analysis; avoid dynamic imports that hide usage; mark side effects.",
+          "context": "Bundler prerequisites and patterns."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "tree shaking",
+            "ES modules",
+            "dead code",
+            "sideEffects",
+            "per-module imports"
+          ],
+          "concepts": [
+            "static analysis",
+            "avoid dynamic requires",
+            "bundle hygiene"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "tree shaking",
+            "per-module imports"
+          ],
+          "concepts": [
+            "static analysis"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-008",
+      "domain": "web-dev",
+      "question": "How do you design a GraphQL schema for evolvability?",
+      "expectedAnswer": "Favor composition over inheritance-like interfaces; use clear, stable IDs; support pagination and filtering; version via extensions rather than breaking changes. Document nullability semantics to prevent ambiguity at clients.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/graphql-schema-design.txt",
+          "relevantText": "Design for evolvability: stable IDs, pagination patterns, additive changes; clarify nullability and deprecation.",
+          "context": "Schema best practices."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "GraphQL schema",
+            "evolvability",
+            "pagination",
+            "nullability",
+            "deprecation"
+          ],
+          "concepts": [
+            "stable IDs",
+            "additive versioning",
+            "filtering"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "GraphQL schema",
+            "deprecation"
+          ],
+          "concepts": [
+            "stable IDs"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-009",
+      "domain": "web-dev",
+      "question": "When and how should you use Error Boundaries?",
+      "expectedAnswer": "Use Error Boundaries to catch render-time errors and display fallback UI without crashing the whole app. Place boundaries around risky subtrees (remote components, complex charts) and log errors to observability tools.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/error-boundaries.txt",
+          "relevantText": "Error Boundaries intercept render errors and render fallbacks; scope them around unstable UI regions.",
+          "context": "Purpose and placement."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "Error Boundary",
+            "fallback UI",
+            "observability",
+            "scoping"
+          ],
+          "concepts": [
+            "contain failures",
+            "user experience",
+            "logging"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "Error Boundary",
+            "scoping"
+          ],
+          "concepts": [
+            "contain failures"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-010",
+      "domain": "web-dev",
+      "question": "Outline an accessibility (a11y) checklist for interactive components.",
+      "expectedAnswer": "Ensure keyboard navigability, focus management, proper ARIA roles/states, color contrast, and visible focus rings. Provide labels for inputs, associate descriptions with controls, and test with screen readers and keyboard-only usage.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/accessibility-checklist.txt",
+          "relevantText": "Keyboard access, focus order, ARIA semantics, contrast, and assistive tech testing make up the core a11y checklist.",
+          "context": "Checklist summary."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "accessibility",
+            "keyboard",
+            "focus",
+            "ARIA",
+            "contrast",
+            "screen reader"
+          ],
+          "concepts": [
+            "interactive components",
+            "labels/descriptions",
+            "testing"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "accessibility",
+            "screen reader"
+          ],
+          "concepts": [
+            "interactive components"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-011",
+      "domain": "web-dev",
+      "question": "What are secure defaults for frontend apps (XSS/CSRF)?",
+      "expectedAnswer": "Escape/encode user input, use Content Security Policy, sanitize HTML, and prefer same-site cookies with CSRF tokens where needed. Avoid dangerouslySetInnerHTML; validate third-party scripts and lock down permissions.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/security.txt",
+          "relevantText": "Mitigate XSS via encoding/sanitization and CSP; defend CSRF with same-site cookies and tokens; minimize dangerous HTML injection.",
+          "context": "Security hardening tips."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "XSS",
+            "CSRF",
+            "CSP",
+            "sanitize",
+            "same-site cookies"
+          ],
+          "concepts": [
+            "secure defaults",
+            "avoid HTML injection",
+            "tokens"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "XSS",
+            "same-site cookies"
+          ],
+          "concepts": [
+            "secure defaults"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-012",
+      "domain": "web-dev",
+      "question": "How should authentication and authorization be handled on the frontend?",
+      "expectedAnswer": "Use short-lived access tokens with refresh flows; store tokens in httpOnly cookies when possible; gate routes/components based on role/claims. Avoid exposing secrets to the client; rely on the backend for sensitive checks.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/authn-authz.txt",
+          "relevantText": "Prefer cookie-based tokens with refresh; client enforces visibility while server enforces authority; avoid client secrets.",
+          "context": "Auth patterns."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "authentication",
+            "authorization",
+            "tokens",
+            "refresh",
+            "httpOnly"
+          ],
+          "concepts": [
+            "route guards",
+            "backend authority",
+            "least privilege"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "authentication",
+            "httpOnly"
+          ],
+          "concepts": [
+            "route guards"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-013",
+      "domain": "web-dev",
+      "question": "What are recommended patterns for complex forms?",
+      "expectedAnswer": "Use controlled components or form libraries, validate on change/blur/submit, and provide inline error states. Keep business logic in schema validators; handle async submits with optimistic UI where safe.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/forms-best-practices.txt",
+          "relevantText": "Form libraries centralize validation; inline errors aid UX; async submissions can be optimistic when reversible.",
+          "context": "Form patterns."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "forms",
+            "validation",
+            "controlled inputs",
+            "optimistic UI",
+            "errors"
+          ],
+          "concepts": [
+            "schema validation",
+            "async handling",
+            "UX feedback"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "forms",
+            "errors"
+          ],
+          "concepts": [
+            "schema validation"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-014",
+      "domain": "web-dev",
+      "question": "Explain microfrontends and their trade-offs.",
+      "expectedAnswer": "Microfrontends split large UIs into independently deployable slices. They help team autonomy and scaling but add complexity in routing, shared state, and design consistency. Use when org scale justifies the overhead.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/microfrontends.txt",
+          "relevantText": "Microfrontends enable independent teams but introduce integration complexity; adopt only with clear org benefits.",
+          "context": "Definition and caution."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "microfrontends",
+            "team autonomy",
+            "integration",
+            "routing",
+            "shared state"
+          ],
+          "concepts": [
+            "independent deploys",
+            "design consistency",
+            "overhead"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "microfrontends",
+            "shared state"
+          ],
+          "concepts": [
+            "independent deploys"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-015",
+      "domain": "web-dev",
+      "question": "How do feature flags support safer releases?",
+      "expectedAnswer": "Flags enable progressive delivery—rollouts, canaries, and kill-switches. Keep flag scope narrow, add expiry discipline, and ensure metrics/alerts to detect regressions.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/release-engineering.txt",
+          "relevantText": "Feature flags allow controlled rollouts and fast rollback; success requires ownership and expiration policies.",
+          "context": "Safety via progressive delivery."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "feature flags",
+            "progressive delivery",
+            "canary",
+            "rollback",
+            "expiry"
+          ],
+          "concepts": [
+            "safer releases",
+            "observability",
+            "discipline"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "feature flags",
+            "expiry"
+          ],
+          "concepts": [
+            "safer releases"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-016",
+      "domain": "web-dev",
+      "question": "Monorepo basics: when and how?",
+      "expectedAnswer": "Use monorepos to share code and tooling across projects; add workspaces, consistent lint/test, and CI caching. Beware of repo bloat; use code ownership and modular boundaries.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/monorepo-practices.txt",
+          "relevantText": "Monorepos centralize shared code; workspace tools and ownership boundaries mitigate scale risks.",
+          "context": "Benefits and guardrails."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "monorepo",
+            "workspaces",
+            "code ownership",
+            "caching",
+            "boundaries"
+          ],
+          "concepts": [
+            "shared tooling",
+            "scale risks",
+            "modularity"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "monorepo",
+            "boundaries"
+          ],
+          "concepts": [
+            "shared tooling"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-017",
+      "domain": "web-dev",
+      "question": "Design a performance budget and enforce it in CI.",
+      "expectedAnswer": "Define budgets for LCP/TTI/JS weight; automate checks in CI with Lighthouse or WebPageTest. Block merges that exceed thresholds and track trends per PR.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/performance-budgets.txt",
+          "relevantText": "Set budgets for key metrics and enforce via CI; monitor trends over time.",
+          "context": "Budgeting and enforcement."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "performance budget",
+            "LCP",
+            "TTI",
+            "Lighthouse",
+            "CI"
+          ],
+          "concepts": [
+            "thresholds",
+            "blocking checks",
+            "trend tracking"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "performance budget",
+            "CI"
+          ],
+          "concepts": [
+            "thresholds"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-018",
+      "domain": "web-dev",
+      "question": "Service workers and caching strategies—what’s a good default?",
+      "expectedAnswer": "Use a network-first strategy for dynamic content and stale-while-revalidate for static assets; version caches and handle updates with a postMessage prompt. Be conservative with offline fallbacks unless the UX demands it.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/service-workers.txt",
+          "relevantText": "Choose strategies per asset type; SW update flow and cache versioning are essential to avoid stale content.",
+          "context": "Default strategies."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "service worker",
+            "caching",
+            "stale-while-revalidate",
+            "network-first",
+            "versioning"
+          ],
+          "concepts": [
+            "update flow",
+            "asset types",
+            "offline trade-offs"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "service worker",
+            "versioning"
+          ],
+          "concepts": [
+            "update flow"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-019",
+      "domain": "web-dev",
+      "question": "Testing pyramid for frontend apps—how to balance unit, integration, E2E?",
+      "expectedAnswer": "Favor many fast unit tests, fewer integration tests, and a small set of E2E smoke tests. Test behavior over implementation details; keep E2E stable by focusing on critical paths.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/testing-strategy.txt",
+          "relevantText": "Adopt a pyramid: unit at base, integration in the middle, E2E small and stable; prioritize user flows.",
+          "context": "Test mix guidance."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "testing pyramid",
+            "unit",
+            "integration",
+            "E2E",
+            "critical paths"
+          ],
+          "concepts": [
+            "behavior focus",
+            "stability",
+            "coverage balance"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "testing pyramid",
+            "critical paths"
+          ],
+          "concepts": [
+            "behavior focus"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "web-dev-020",
+      "domain": "web-dev",
+      "question": "CI/CD for frontend—what should a minimal pipeline include?",
+      "expectedAnswer": "Run lint/typecheck/tests, build the app, run Lighthouse on a preview, and deploy on main. Cache dependencies for speed and report artifacts (bundle sizes, perf metrics) for each PR.",
+      "citations": [
+        {
+          "sourceFile": "web-dev/cicd-pipeline.txt",
+          "relevantText": "Minimal pipeline runs static checks and tests, builds, measures performance on a preview, and deploys after merge.",
+          "context": "Pipeline steps and artifacts."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "CI/CD",
+            "lint",
+            "typecheck",
+            "build",
+            "Lighthouse",
+            "deploy"
+          ],
+          "concepts": [
+            "pipeline stages",
+            "artifacts",
+            "caching"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "CI/CD",
+            "deploy"
+          ],
+          "concepts": [
+            "pipeline stages"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "nn-002",
+      "domain": "null-not-null",
+      "question": "How should nullness update when adding strong supporting evidence?",
+      "expectedAnswer": "Nullness should monotonically decrease with supporting evidence, e.g., n' = max(0, n · (1 − k·c)) where k controls sensitivity and c is confidence in the evidence. This captures increased certainty while preventing overconfidence when c is imperfect.",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/update-rules.txt",
+          "relevantText": "A simple monotone update for support is n' = max(0, n · (1 − k·c)), with k as a tunable sensitivity and c the evidence confidence.",
+          "context": "Support update formula and rationale."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "nullness update",
+            "supporting evidence",
+            "monotonic decrease",
+            "confidence",
+            "sensitivity k"
+          ],
+          "concepts": [
+            "update formula",
+            "prevent overconfidence",
+            "monotonicity"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "nullness update",
+            "sensitivity k"
+          ],
+          "concepts": [
+            "update formula"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "nn-003",
+      "domain": "null-not-null",
+      "question": "How should refuting evidence affect nullness?",
+      "expectedAnswer": "Refuting evidence should increase nullness within bounds, e.g., n' = min(1, n + k·c·λ), where λ scales impact for refutations. This reflects uncertainty introduced by contradictions and keeps values in [0,1].",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/update-rules.txt",
+          "relevantText": "For refutation, increase nullness with n' = min(1, n + k·c·λ) and clamp to [0,1].",
+          "context": "Refutation update formula."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "refuting evidence",
+            "increase nullness",
+            "bounds",
+            "confidence",
+            "lambda"
+          ],
+          "concepts": [
+            "contradiction handling",
+            "clamping",
+            "uncertainty growth"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "refuting evidence",
+            "lambda"
+          ],
+          "concepts": [
+            "contradiction handling"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "nn-004",
+      "domain": "null-not-null",
+      "question": "Explain empathy-weighted decision-making (the Golden Loop) in VOLaM.",
+      "expectedAnswer": "Stakeholder weights form an empathy profile used in scoring candidate actions by expected flourishing. By adjusting weights, the system makes trade-offs explicit and tunable, enabling transparent reasoning aligned with the Golden Rule family.",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/empathy-golden-loop.txt",
+          "relevantText": "An empathy profile assigns weights to stakeholders; action utility is aggregated with these weights to make trade-offs explicit.",
+          "context": "Empathy-weighted utility."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "empathy weights",
+            "stakeholders",
+            "utility aggregation",
+            "trade-offs",
+            "Golden Loop"
+          ],
+          "concepts": [
+            "transparent trade-offs",
+            "alignment",
+            "tunable preferences"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "empathy weights",
+            "Golden Loop"
+          ],
+          "concepts": [
+            "transparent trade-offs"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "nn-005",
+      "domain": "null-not-null",
+      "question": "What is the I/Not‑I boundary, and why update it?",
+      "expectedAnswer": "The I/Not‑I boundary partitions self from environment/others. Updating it after evidence clarifies identity facets and responsibilities, reducing nullness about roles and goals. It prevents overfitting a static self-concept to new contexts.",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/i-not-i-boundary.txt",
+          "relevantText": "I/Not‑I delineates self-context; updating the boundary integrates new evidence about capacities, duties, and goals.",
+          "context": "Definition and motivation."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "I/Not-I",
+            "boundary update",
+            "identity facets",
+            "responsibility",
+            "context shift"
+          ],
+          "concepts": [
+            "self-environment partition",
+            "adaptive identity",
+            "nullness reduction"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "I/Not-I",
+            "context shift"
+          ],
+          "concepts": [
+            "self-environment partition"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "nn-006",
+      "domain": "null-not-null",
+      "question": "How do you calibrate nullness against empirical error?",
+      "expectedAnswer": "Treat predicted certainty (1−n) as a probability of correctness and compute Brier score or ECE against outcomes. Apply temperature scaling or isotonic regression to improve calibration.",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/calibration.txt",
+          "relevantText": "Nullness can be calibrated by aligning (1−n) with observed accuracy using Brier/ECE and post-hoc scaling methods.",
+          "context": "Calibration metrics and fixes."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "calibration",
+            "Brier",
+            "ECE",
+            "temperature scaling",
+            "isotonic"
+          ],
+          "concepts": [
+            "align certainty with accuracy",
+            "post-hoc fixes",
+            "evaluation"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "calibration",
+            "isotonic"
+          ],
+          "concepts": [
+            "align certainty with accuracy"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "nn-007",
+      "domain": "null-not-null",
+      "question": "When should an agent ask for more information vs act now?",
+      "expectedAnswer": "Set an inquiry threshold on nullness; if n exceeds τ, prefer an information-gathering action expected to reduce n more than the opportunity cost of waiting. Otherwise act with current best estimate.",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/act-vs-ask.txt",
+          "relevantText": "Compare expected nullness reduction from inquiry to the cost of delay; act if below a threshold, ask if above.",
+          "context": "Decision threshold policy."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "threshold τ",
+            "ask vs act",
+            "expected reduction",
+            "opportunity cost"
+          ],
+          "concepts": [
+            "policy gating",
+            "value of information",
+            "timeliness"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "threshold τ",
+            "opportunity cost"
+          ],
+          "concepts": [
+            "policy gating"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "nn-008",
+      "domain": "null-not-null",
+      "question": "How do support/refute stances factor into evidence weighting?",
+      "expectedAnswer": "Label evidence with stance and confidence; supportive evidence reduces nullness while refuting evidence increases it. Conflicts trigger a branch or deeper investigation step to resolve contradictions before acting.",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/evidence-stances.txt",
+          "relevantText": "Evidence stances guide asymmetric updates—support lowers nullness, refute raises; unresolved conflicts prompt further inquiry.",
+          "context": "Stance-driven updates."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "support",
+            "refute",
+            "stance",
+            "confidence",
+            "conflict resolution"
+          ],
+          "concepts": [
+            "asymmetric updates",
+            "branching",
+            "investigation"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "support",
+            "conflict resolution"
+          ],
+          "concepts": [
+            "asymmetric updates"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "nn-009",
+      "domain": "null-not-null",
+      "question": "Differentiate nullness from probability in VOLaM.",
+      "expectedAnswer": "Probability concerns event likelihood; nullness measures epistemic uncertainty about our representation. A low-probability event can still have low nullness if well-understood, and vice versa.",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/nullness-vs-probability.txt",
+          "relevantText": "Nullness is epistemic (knowledge state), distinct from aleatory probabilities; they interact but are not identical.",
+          "context": "Conceptual distinction."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "nullness",
+            "probability",
+            "epistemic",
+            "aleatory",
+            "knowledge state"
+          ],
+          "concepts": [
+            "distinct measures",
+            "interaction not identity",
+            "examples"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "nullness",
+            "knowledge state"
+          ],
+          "concepts": [
+            "distinct measures"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    },
+    {
+      "id": "nn-010",
+      "domain": "null-not-null",
+      "question": "How does multi-agent debate reduce nullness?",
+      "expectedAnswer": "Agents with diverse priors present evidence; a mediator scores contributions by nullness reduction per step. The process converges as contradictions are resolved or flagged for experiments.",
+      "citations": [
+        {
+          "sourceFile": "null-not-null/multi-agent-debate.txt",
+          "relevantText": "A mediator tracks ΔNullness/time and rewards evidence that most reduces uncertainty; unresolved conflicts are escalated.",
+          "context": "Debate protocol."
+        }
+      ],
+      "rubric": {
+        "fullCredit": {
+          "score": 1.0,
+          "keywords": [
+            "multi-agent",
+            "mediator",
+            "ΔNullness",
+            "convergence",
+            "experiments"
+          ],
+          "concepts": [
+            "diverse priors",
+            "scoring contributions",
+            "escalation"
+          ]
+        },
+        "partialCredit": {
+          "score": 0.5,
+          "keywords": [
+            "multi-agent",
+            "experiments"
+          ],
+          "concepts": [
+            "diverse priors"
+          ]
+        },
+        "noCredit": {
+          "score": 0.0,
+          "description": "Answer fails to address the core concepts or uses unrelated reasoning."
+        }
+      }
+    }
+  ]
+}
