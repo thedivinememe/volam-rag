@@ -8,6 +8,8 @@
     "eval:baseline": "tsx scripts/eval-baseline.ts",
     "eval:baseline:seed": "tsx scripts/eval-baseline.ts --seed=42",
     "eval:volam": "tsx scripts/eval-volam.ts",
+    "eval:volam:seed": "tsx scripts/eval-volam.ts --seed=42",
+    "plots:calibration": "tsx scripts/generate-calibration-plots.ts",
     "setup": "tsx scripts/setup.ts",
     "validate:qa": "tsx scripts/validate-qa.ts",
     "test": "vitest",

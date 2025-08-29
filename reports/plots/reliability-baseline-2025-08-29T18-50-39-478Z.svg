@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500" height="400" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .title { font: bold 16px sans-serif; text-anchor: middle; }
+    .axis-label { font: 12px sans-serif; text-anchor: middle; }
+    .tick-label { font: 10px sans-serif; text-anchor: middle; }
+  </style>
+  
+  <!-- Background -->
+  <rect width="500" height="400" fill="white"/>
+  
+  <!-- Plot area -->
+  <rect x="60" y="40" width="400" height="300" fill="none" stroke="#e5e7eb"/>
+  
+  <!-- Bars -->
+  <rect x="62" y="214.03029622470223" width="198" height="125.96970377529779" fill="#2563eb" opacity="0.7"/><rect x="260" y="98.65000000000015" width="198" height="241.34999999999985" fill="#ef4444" opacity="0.7"/>
+  
+  <!-- Axes -->
+  <line x1="60" y1="40" x2="60" y2="340" stroke="black"/>
+  <line x1="60" y1="340" x2="460" y2="340" stroke="black"/>
+  
+  <!-- Axis labels -->
+  <text x="250" y="390" class="axis-label">Confidence Bins</text>
+  <text x="20" y="200" class="axis-label" transform="rotate(-90, 20, 200)">Proportion</text>
+  
+  <!-- Y-axis tick labels -->
+  <text x="50" y="343" class="tick-label" text-anchor="end">0.0</text><text x="50" y="283" class="tick-label" text-anchor="end">0.2</text><text x="50" y="223" class="tick-label" text-anchor="end">0.4</text><text x="50" y="163" class="tick-label" text-anchor="end">0.6</text><text x="50" y="103" class="tick-label" text-anchor="end">0.8</text><text x="50" y="43" class="tick-label" text-anchor="end">1.0</text>
+  
+  <!-- Title -->
+  <text x="250" y="25" class="title">Reliability Diagram - BASELINE</text>
+  
+  <!-- Legend -->
+  <rect x="380" y="55" width="15" height="10" fill="#2563eb" opacity="0.7"/>
+  <text x="400" y="65" class="tick-label">Accuracy</text>
+  <rect x="380" y="75" width="15" height="10" fill="#ef4444" opacity="0.7"/>
+  <text x="400" y="85" class="tick-label">Confidence</text>
+</svg>
