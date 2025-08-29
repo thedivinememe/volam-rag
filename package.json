@@ -8,6 +8,7 @@
     "eval:baseline": "tsx scripts/eval-baseline.ts",
     "eval:volam": "tsx scripts/eval-volam.ts",
     "setup": "tsx scripts/setup.ts",
+    "validate:qa": "tsx scripts/validate-qa.ts",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "lint": "eslint . --ext .ts,.tsx",

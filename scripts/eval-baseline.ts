@@ -56,42 +56,37 @@ class BaselineEvaluator {
   }
 
   private async loadEvaluationQuestions(): Promise<EvaluationQuestion[]> {
-    // Create sample evaluation questions
-    const questions: EvaluationQuestion[] = [
-      {
-        id: 'q1',
-        query: 'What is climate change?',
-        expectedAnswer: 'Climate change refers to long-term shifts in global temperatures and weather patterns caused primarily by human activities since the 1800s.',
-        relevantChunks: ['chunk-1']
-      },
-      {
-        id: 'q2',
-        query: 'How does artificial intelligence work?',
-        expectedAnswer: 'AI works by using machine learning algorithms that enable computers to learn and improve from experience without being explicitly programmed.',
-        relevantChunks: ['chunk-2']
-      },
-      {
-        id: 'q3',
-        query: 'What are renewable energy sources?',
-        expectedAnswer: 'Renewable energy sources include solar, wind, hydroelectric, and geothermal energy that come from natural sources that are constantly replenished.',
-        relevantChunks: ['chunk-3']
-      },
-      {
-        id: 'q4',
-        query: 'What causes greenhouse gas emissions?',
-        expectedAnswer: 'Greenhouse gas emissions are primarily caused by burning fossil fuels, which generates emissions that trap heat in the atmosphere.',
-        relevantChunks: ['chunk-1']
-      },
-      {
-        id: 'q5',
-        query: 'What is machine learning?',
-        expectedAnswer: 'Machine learning is a subset of AI that enables computers to learn and improve from experience without being explicitly programmed.',
-        relevantChunks: ['chunk-2']
-      }
-    ];
+    try {
+      // Load questions from our Q/A dataset
+      const datasetPath = path.join(process.cwd(), 'data/evaluation/qa-dataset.json');
+      const datasetContent = await fs.readFile(datasetPath, 'utf8');
+      const dataset = JSON.parse(datasetContent);
 
-    console.log(`📝 Loaded ${questions.length} evaluation questions`);
-    return questions;
+      const questions: EvaluationQuestion[] = dataset.questions.map((q: any) => ({
+        id: q.id,
+        query: q.question,
+        expectedAnswer: q.expectedAnswer,
+        relevantChunks: q.citations.map((c: any) => c.sourceFile)
+      }));
+
+      console.log(`📝 Loaded ${questions.length} evaluation questions from dataset`);
+      return questions;
+    } catch (error) {
+      console.error('❌ Failed to load Q/A dataset, falling back to sample questions');
+      
+      // Fallback to sample questions if dataset loading fails
+      const questions: EvaluationQuestion[] = [
+        {
+          id: 'q1',
+          query: 'What is climate change?',
+          expectedAnswer: 'Climate change refers to long-term shifts in global temperatures and weather patterns caused primarily by human activities since the 1800s.',
+          relevantChunks: ['chunk-1']
+        }
+      ];
+
+      console.log(`📝 Loaded ${questions.length} fallback questions`);
+      return questions;
+    }
   }
 
   private async evaluateQuestions(questions: EvaluationQuestion[]): Promise<EvaluationResult[]> {
