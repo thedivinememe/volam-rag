@@ -6,6 +6,7 @@
   "scripts": {
     "seed": "tsx scripts/seed_corpus.ts",
     "eval:baseline": "tsx scripts/eval-baseline.ts",
+    "eval:baseline:seed": "tsx scripts/eval-baseline.ts --seed=42",
     "eval:volam": "tsx scripts/eval-volam.ts",
     "setup": "tsx scripts/setup.ts",
     "validate:qa": "tsx scripts/validate-qa.ts",

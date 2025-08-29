@@ -45,6 +45,11 @@ eval-baseline:
 	@echo "Running baseline evaluation..."
 	npm run eval:baseline
 
+# Run baseline evaluation with deterministic seed
+eval-baseline-seed:
+	@echo "Running baseline evaluation with seed=42..."
+	npm run eval:baseline:seed
+
 # Run VOLaM algorithm evaluation
 eval-volam:
 	@echo "Running VOLaM evaluation..."

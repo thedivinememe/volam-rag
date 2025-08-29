@@ -2,7 +2,7 @@
 
 /**
  * Baseline evaluation script: Test cosine-only ranking
- * Usage: npm run eval-baseline
+ * Usage: npm run eval-baseline [--seed=42]
  */
 
 import axios from 'axios';
@@ -23,16 +23,31 @@ interface EvaluationResult {
   actualAnswer: string;
   confidence: number;
   accuracy: number;
+  correct: boolean;
   brierScore: number;
   topEvidence: any[];
+}
+
+interface JSONLResult {
+  questionId: string;
+  pred: string;
+  conf: number;
+  correct: boolean;
+  brier: number;
 }
 
 class BaselineEvaluator {
   private apiUrl = 'http://localhost:8000';
   private resultsDir = path.join(process.cwd(), 'reports');
+  private seed: number;
+
+  constructor(seed?: number) {
+    this.seed = seed || Math.floor(Math.random() * 10000);
+  }
 
   async run(): Promise<void> {
     console.log('📊 Starting baseline evaluation...');
+    console.log(`🎲 Using seed: ${this.seed}`);
 
     try {
       await this.ensureResultsDir();
@@ -106,6 +121,7 @@ class BaselineEvaluator {
 
         const { evidence, answer, confidence } = response.data;
         const accuracy = this.calculateAccuracy(answer, question.expectedAnswer);
+        const correct = accuracy >= 0.5; // Consider correct if accuracy >= 50%
         const brierScore = this.calculateBrierScore(confidence, accuracy);
 
         results.push({
@@ -115,6 +131,7 @@ class BaselineEvaluator {
           actualAnswer: question.expectedAnswer,
           confidence,
           accuracy,
+          correct,
           brierScore,
           topEvidence: evidence
         });
@@ -131,6 +148,7 @@ class BaselineEvaluator {
           actualAnswer: question.expectedAnswer,
           confidence: 0,
           accuracy: 0,
+          correct: false,
           brierScore: 1,
           topEvidence: []
         });
@@ -202,21 +220,109 @@ class BaselineEvaluator {
 
   private async saveResults(mode: string, results: EvaluationResult[], metrics: any): Promise<void> {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `${mode}-evaluation-${timestamp}.json`;
-    const filepath = path.join(this.resultsDir, filename);
-
+    
+    // Save JSON report (existing format)
+    const jsonFilename = `${mode}-evaluation-${timestamp}.json`;
+    const jsonFilepath = path.join(this.resultsDir, jsonFilename);
     const report = {
       mode,
       metrics,
       results,
+      seed: this.seed,
       generatedAt: new Date().toISOString()
     };
+    await fs.writeFile(jsonFilepath, JSON.stringify(report, null, 2));
+    console.log(`💾 JSON results saved to: ${jsonFilename}`);
 
-    await fs.writeFile(filepath, JSON.stringify(report, null, 2));
-    console.log(`💾 Results saved to: ${filename}`);
+    // Save JSONL format (Issue #5 requirement)
+    const jsonlFilename = `${mode}-evaluation-${timestamp}.jsonl`;
+    const jsonlFilepath = path.join(this.resultsDir, jsonlFilename);
+    const jsonlResults: JSONLResult[] = results.map(r => ({
+      questionId: r.questionId,
+      pred: r.predictedAnswer,
+      conf: r.confidence,
+      correct: r.correct,
+      brier: r.brierScore
+    }));
+    const jsonlContent = jsonlResults.map(r => JSON.stringify(r)).join('\n');
+    await fs.writeFile(jsonlFilepath, jsonlContent);
+    console.log(`💾 JSONL results saved to: ${jsonlFilename}`);
+
+    // Save summary table (Issue #5 requirement)
+    const summaryFilename = `${mode}-summary-${timestamp}.md`;
+    const summaryFilepath = path.join(this.resultsDir, summaryFilename);
+    const summaryContent = this.generateSummaryTable(results, metrics);
+    await fs.writeFile(summaryFilepath, summaryContent);
+    console.log(`💾 Summary table saved to: ${summaryFilename}`);
+  }
+
+  private generateSummaryTable(results: EvaluationResult[], metrics: any): string {
+    const correctCount = results.filter(r => r.correct).length;
+    const totalCount = results.length;
+    
+    const lines = [
+      '# Baseline Evaluation Summary',
+      `Generated: ${new Date().toISOString()}`,
+      `Seed: ${this.seed}`,
+      '',
+      '## Overall Metrics',
+      '',
+      '| Metric | Value |',
+      '|--------|-------|',
+      `| Total Questions | ${totalCount} |`,
+      `| Correct Answers | ${correctCount} |`,
+      `| Accuracy | ${(metrics.accuracy * 100).toFixed(1)}% |`,
+      `| Brier Score | ${metrics.brierScore.toFixed(3)} |`,
+      `| ECE | ${metrics.ece.toFixed(3)} |`,
+      '',
+      '## Per-Question Results',
+      '',
+      '| Question ID | Correct | Confidence | Brier Score |',
+      '|-------------|---------|------------|-------------|',
+      ...results.map(r => 
+        `| ${r.questionId} | ${r.correct ? '✅' : '❌'} | ${(r.confidence * 100).toFixed(1)}% | ${r.brierScore.toFixed(3)} |`
+      ),
+      '',
+      '## Question Details',
+      '',
+      ...results.flatMap(r => [
+        `### ${r.questionId}`,
+        `**Query:** ${r.query}`,
+        `**Predicted:** ${r.predictedAnswer}`,
+        `**Accuracy:** ${(r.accuracy * 100).toFixed(1)}%`,
+        `**Confidence:** ${(r.confidence * 100).toFixed(1)}%`,
+        `**Correct:** ${r.correct ? 'Yes' : 'No'}`,
+        `**Brier Score:** ${r.brierScore.toFixed(3)}`,
+        ''
+      ])
+    ];
+
+    return lines.join('\n');
   }
 }
 
+// Parse command line arguments
+function parseArgs(): { seed?: number } {
+  const args = process.argv.slice(2);
+  const result: { seed?: number } = {};
+  
+  for (const arg of args) {
+    if (arg.startsWith('--seed=')) {
+      const seedValue = parseInt(arg.split('=')[1], 10);
+      if (!isNaN(seedValue)) {
+        result.seed = seedValue;
+      }
+    }
+  }
+  
+  return result;
+}
+
 // Run the baseline evaluation
-const evaluator = new BaselineEvaluator();
-evaluator.run();
+async function main() {
+  const { seed } = parseArgs();
+  const evaluator = new BaselineEvaluator(seed);
+  await evaluator.run();
+}
+
+main().catch(console.error);
