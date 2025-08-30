@@ -21,7 +21,7 @@ Object.defineProperty(window, 'localStorage', {
 });
 
 // Make localStorage mock available globally
-(globalThis as any).localStorageMock = localStorageMock;
+(globalThis as unknown as { localStorageMock: typeof localStorageMock }).localStorageMock = localStorageMock;
 
 // Cleanup after each test case (e.g. clearing jsdom)
 afterEach(() => {

@@ -3,8 +3,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useEmpathyProfile } from './useEmpathyProfile';
 
+// Define localStorage mock type
+interface LocalStorageMock {
+  getItem: ReturnType<typeof vi.fn>;
+  setItem: ReturnType<typeof vi.fn>;
+  removeItem: ReturnType<typeof vi.fn>;
+  clear: ReturnType<typeof vi.fn>;
+}
+
 // Get the global localStorage mock or create a local one
-const localStorageMock = (globalThis as any).localStorageMock || {
+const globalWithMock = globalThis as unknown as { localStorageMock?: LocalStorageMock };
+const localStorageMock: LocalStorageMock = globalWithMock.localStorageMock || {
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
@@ -12,7 +21,7 @@ const localStorageMock = (globalThis as any).localStorageMock || {
 };
 
 // Ensure localStorage is mocked if not already done globally
-if (!(globalThis as any).localStorageMock) {
+if (!globalWithMock.localStorageMock) {
   Object.defineProperty(window, 'localStorage', {
     value: localStorageMock,
     writable: true,
