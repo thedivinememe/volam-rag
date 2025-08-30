@@ -1,3 +1,4 @@
+import { AnswerService, Citation } from '../services/answer.js';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { RankingService } from '../services/ranking.js';
@@ -15,14 +16,6 @@ interface AnswerQuery {
   mode?: 'baseline' | 'volam';
 }
 
-interface Citation {
-  id: string;
-  content: string;
-  source: string;
-  score: number;
-  index: number;
-}
-
 interface AnswerResponse {
   query: string;
   answer: string;
@@ -38,6 +31,7 @@ interface AnswerResponse {
 
 export async function answerRoutes(fastify: FastifyInstance) {
   const rankingService = new RankingService();
+  const answerService = new AnswerService();
 
   fastify.get('/answer', {
     schema: {
@@ -65,7 +59,8 @@ export async function answerRoutes(fastify: FastifyInstance) {
                   content: { type: 'string' },
                   source: { type: 'string' },
                   score: { type: 'number' },
-                  index: { type: 'number' }
+                  index: { type: 'number' },
+                  quotedText: { type: 'string' }
                 }
               }
             },
@@ -96,17 +91,13 @@ export async function answerRoutes(fastify: FastifyInstance) {
         rankingResult = await rankingService.rankBaseline(params.query, params.k);
       }
 
-      // Extract citations from evidence
-      const citations: Citation[] = rankingResult.evidence.map((evidence, index) => ({
-        id: evidence.id,
-        content: evidence.content,
-        source: evidence.source,
-        score: evidence.score,
-        index: index + 1
-      }));
-
-      // Compose answer with proper citations
-      const answer = composeAnswerWithCitations(rankingResult.evidence, params.query);
+      // Use AnswerService to compose answer with rationale and citations
+      const answerComposition = await answerService.composeAnswer({
+        query: params.query,
+        evidence: rankingResult.evidence,
+        mode: params.mode,
+        rankingResult
+      });
 
       const responseTime = Date.now() - startTime;
 
@@ -117,20 +108,21 @@ export async function answerRoutes(fastify: FastifyInstance) {
         query: params.query,
         k: params.k,
         responseTime,
-        citationCount: citations.length,
+        citationCount: answerComposition.citations.length,
+        confidence: answerComposition.confidence,
         timestamp: new Date().toISOString()
       });
 
       const response: AnswerResponse = {
         query: params.query,
-        answer,
-        citations,
-        confidence: rankingResult.confidence,
+        answer: answerComposition.answer,
+        citations: answerComposition.citations,
+        confidence: answerComposition.confidence,
         mode: params.mode,
         metadata: {
           responseTime,
           timestamp: new Date().toISOString(),
-          citationCount: citations.length
+          citationCount: answerComposition.citations.length
         }
       };
 
@@ -143,28 +135,4 @@ export async function answerRoutes(fastify: FastifyInstance) {
       });
     }
   });
-}
-
-/**
- * Compose answer with numbered citations
- */
-function composeAnswerWithCitations(evidence: any[], query: string): string {
-  if (evidence.length === 0) {
-    return `I don't have sufficient evidence to answer the query: "${query}". Please try rephrasing your question or providing more context.`;
-  }
-
-  // Create the main answer content
-  const mainContent = evidence
-    .map((e, index) => `[${index + 1}] ${e.content}`)
-    .join('\n\n');
-
-  // Create a synthesized response
-  const synthesis = `Based on the available evidence, here's what I found regarding "${query}":
-
-${mainContent}
-
-Sources:
-${evidence.map((e, index) => `[${index + 1}] ${e.source}`).join('\n')}`;
-
-  return synthesis;
 }
