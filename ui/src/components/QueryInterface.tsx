@@ -23,7 +23,7 @@ export const QueryInterface = ({ onQuery, loading }: QueryInterfaceProps) => {
     k: 5,
   });
 
-  const { profile, updateStakeholder, resetProfile, setFullProfile } = useEmpathyProfile();
+  const { profile, setFullProfile } = useEmpathyProfile();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

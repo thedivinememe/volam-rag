@@ -96,7 +96,7 @@ function normalizeProfile(profile: EmpathyProfile): EmpathyProfile {
 /**
  * Validate that profile has required structure
  */
-function isValidProfile(profile: any): profile is EmpathyProfile {
+function isValidProfile(profile: unknown): profile is EmpathyProfile {
   if (!profile || typeof profile !== 'object') {
     return false;
   }
