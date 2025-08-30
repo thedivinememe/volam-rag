@@ -1,11 +1,15 @@
 import { Evidence, RankingResult } from '../types/core.js';
 
+import { EmpathyService } from './empathy.js';
+
 export class RankingService {
   private vectorStore: any; // Will be initialized with FAISS/Chroma
   private embeddings: any; // Will be initialized with embedding model
+  private empathyService: EmpathyService;
 
   constructor() {
     // TODO: Initialize vector store and embedding model
+    this.empathyService = new EmpathyService();
     console.log('RankingService initialized');
   }
 
@@ -58,34 +62,61 @@ export class RankingService {
     k: number = 5,
     alpha: number = 0.6,
     beta: number = 0.3,
-    gamma: number = 0.1
+    gamma: number = 0.1,
+    empathyProfile: string = 'default'
   ): Promise<RankingResult> {
-    // TODO: Implement actual VOLaM scoring
+    // Mock evidence with realistic content for empathy calculation
     const mockEvidence: Evidence[] = [
       {
         id: '1',
-        content: 'Evidence ranked with VOLaM algorithm',
+        content: 'Climate change affects vulnerable communities and requires policy intervention by government officials to protect affected populations.',
         score: 0.0, // Will be calculated
         cosineScore: 0.82,
         nullness: 0.15,
-        empathyFit: 0.9,
-        source: 'mock-doc-1',
-        metadata: { type: 'volam' }
+        empathyFit: 0.0, // Will be calculated
+        source: 'climate-policy-doc',
+        metadata: { 
+          type: 'volam',
+          domain: 'climate',
+          stakeholders: ['affected_communities', 'policymakers']
+        }
       },
       {
         id: '2',
-        content: 'Another evidence piece with empathy consideration',
+        content: 'Expert researchers and scientists have developed new technology solutions for environmental conservation.',
         score: 0.0,
         cosineScore: 0.75,
         nullness: 0.25,
-        empathyFit: 0.7,
-        source: 'mock-doc-2',
-        metadata: { type: 'volam' }
+        empathyFit: 0.0, // Will be calculated
+        source: 'research-tech-doc',
+        metadata: { 
+          type: 'volam',
+          domain: 'technology',
+          stakeholders: ['experts', 'environmental_scientists']
+        }
+      },
+      {
+        id: '3',
+        content: 'Public health initiatives benefit the general public and healthcare workers in medical facilities.',
+        score: 0.0,
+        cosineScore: 0.68,
+        nullness: 0.35,
+        empathyFit: 0.0, // Will be calculated
+        source: 'health-public-doc',
+        metadata: { 
+          type: 'volam',
+          domain: 'health',
+          stakeholders: ['general_public', 'healthcare_workers']
+        }
       }
     ];
 
-    // Calculate VOLaM scores
+    // Calculate empathy fit for each evidence piece
     for (const evidence of mockEvidence) {
+      const contentTags = this.empathyService.extractContentTags(evidence.content, evidence.metadata);
+      evidence.empathyFit = this.empathyService.calculateEmpathyFit(contentTags, empathyProfile);
+      
+      // Calculate VOLaM score
       evidence.score = this.calculateVOLaMScore(
         evidence.cosineScore,
         evidence.nullness,
@@ -96,8 +127,14 @@ export class RankingService {
       );
     }
 
-    // Sort by VOLaM score
-    mockEvidence.sort((a, b) => b.score - a.score);
+    // Sort by VOLaM score, with tie-breaking by cosine similarity
+    mockEvidence.sort((a, b) => {
+      const scoreDiff = b.score - a.score;
+      if (Math.abs(scoreDiff) < 0.001) { // Tie-breaking threshold
+        return b.cosineScore - a.cosineScore; // Tie-break by cosine
+      }
+      return scoreDiff;
+    });
 
     const answer = this.composeAnswer(mockEvidence, query);
     const confidence = this.calculateConfidence(mockEvidence);
@@ -109,7 +146,8 @@ export class RankingService {
       confidence,
       nullness,
       mode: 'volam',
-      parameters: { alpha, beta, gamma }
+      parameters: { alpha, beta, gamma },
+      empathyProfile
     };
   }
 
