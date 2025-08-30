@@ -147,7 +147,7 @@ export class RankingService {
       nullness,
       mode: 'volam',
       parameters: { alpha, beta, gamma },
-      empathyProfile
+      empathyProfile: typeof empathyProfile === 'string' ? empathyProfile : undefined
     };
   }
 
