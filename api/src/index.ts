@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import { answerRoutes } from './routes/answer.js';
 import cors from '@fastify/cors';
+import { nullnessRoutes } from './routes/nullness.js';
 import { rankRoutes } from './routes/rank.js';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
@@ -39,6 +40,7 @@ await fastify.register(swaggerUi, {
 // Register routes
 await fastify.register(rankRoutes, { prefix: '/api' });
 await fastify.register(answerRoutes, { prefix: '/api' });
+await fastify.register(nullnessRoutes, { prefix: '/api' });
 
 // Health check
 fastify.get('/health', async () => {
