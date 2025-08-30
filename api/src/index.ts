@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import { answerRoutes } from './routes/answer.js';
 import cors from '@fastify/cors';
 import { rankRoutes } from './routes/rank.js';
 import swagger from '@fastify/swagger';
@@ -37,6 +38,7 @@ await fastify.register(swaggerUi, {
 
 // Register routes
 await fastify.register(rankRoutes, { prefix: '/api' });
+await fastify.register(answerRoutes, { prefix: '/api' });
 
 // Health check
 fastify.get('/health', async () => {
