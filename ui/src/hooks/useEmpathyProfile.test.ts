@@ -1,14 +1,28 @@
 import { act, renderHook } from '@testing-library/react';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useEmpathyProfile } from './useEmpathyProfile';
 
-// Get the global localStorage mock
-const localStorageMock = (globalThis as any).localStorageMock;
+// Get the global localStorage mock or create a local one
+const localStorageMock = (globalThis as any).localStorageMock || {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+
+// Ensure localStorage is mocked if not already done globally
+if (!(globalThis as any).localStorageMock) {
+  Object.defineProperty(window, 'localStorage', {
+    value: localStorageMock,
+    writable: true,
+  });
+}
 
 describe('useEmpathyProfile', () => {
   beforeEach(() => {
-    // Mock is already cleared in global setup, but we can reset specific behaviors here if needed
+    // Clear all mocks before each test
+    vi.clearAllMocks();
     localStorageMock.getItem.mockReturnValue(null);
   });
 
