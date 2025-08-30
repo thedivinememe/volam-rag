@@ -6,7 +6,10 @@ import fs from 'fs';
 import path from 'path';
 
 // Load QA dataset for fixture tests
-const qaDatasetPath = path.join(process.cwd(), '../data/evaluation/qa-dataset.json');
+// Handle both local development (api/) and CI (root) working directories
+const qaDatasetPath = fs.existsSync(path.join(process.cwd(), '../data/evaluation/qa-dataset.json'))
+  ? path.join(process.cwd(), '../data/evaluation/qa-dataset.json')
+  : path.join(process.cwd(), 'data/evaluation/qa-dataset.json');
 const qaDataset = JSON.parse(fs.readFileSync(qaDatasetPath, 'utf-8'));
 
 describe('/answer endpoint', () => {
