@@ -8,6 +8,22 @@ export interface NullnessHistory {
   evidence_count: number;
 }
 
+export interface NullnessUpdateResult {
+  oldNullness: number;
+  newNullness: number;
+  deltaNullness: number;
+  concept: string;
+  timestamp: string;
+}
+
+export interface NullnessConfig {
+  k: number; // Evidence weight factor
+  lambda: number; // Time decay factor
+  defaultNullness: number;
+  updateThreshold: number;
+  historyRetention: number;
+}
+
 export class NullnessService {
   private history: Map<string, NullnessHistory[]> = new Map();
 
@@ -81,6 +97,34 @@ export class NullnessService {
   }
 
   /**
+   * Get all concepts with their current nullness and metadata
+   */
+  async getAllConceptsWithMetadata(): Promise<Array<{
+    concept: string;
+    currentNullness: number;
+    lastUpdated: string;
+    updateCount: number;
+  }>> {
+    const concepts = Array.from(this.history.keys());
+    const result = [];
+
+    for (const concept of concepts) {
+      const history = await this.getNullnessHistory(concept);
+      if (history.length > 0) {
+        const latest = history[history.length - 1];
+        result.push({
+          concept,
+          currentNullness: latest.nullness,
+          lastUpdated: latest.timestamp,
+          updateCount: history.length
+        });
+      }
+    }
+
+    return result;
+  }
+
+  /**
    * Extract concept from query (simplified implementation)
    */
   private extractConcept(query: string): string {
@@ -91,6 +135,81 @@ export class NullnessService {
       .slice(0, 3)
       .join('_')
       .replace(/[^a-z0-9_]/g, '');
+  }
+
+  /**
+   * Explicit nullness update with support/refute logic
+   * Update rule: nullness_new = nullness_old ± k * evidence_strength * λ^time_decay
+   */
+  async updateNullnessExplicit(
+    concept: string,
+    action: 'support' | 'refute',
+    evidenceStrength: number,
+    k: number = 0.1,
+    lambda: number = 0.9
+  ): Promise<NullnessUpdateResult> {
+    const history = await this.getNullnessHistory(concept);
+    
+    // Get current nullness or use default
+    const currentNullness = history.length > 0 
+      ? history[history.length - 1].nullness 
+      : 0.5; // Default nullness
+
+    // Calculate time decay factor (simplified - using 1.0 for now)
+    const timeDelta = 1.0; // TODO: Calculate actual time since last update
+    const decayFactor = Math.pow(lambda, timeDelta);
+
+    // Calculate nullness change based on action
+    const evidenceImpact = k * evidenceStrength * decayFactor;
+    let newNullness: number;
+
+    if (action === 'support') {
+      // Supporting evidence decreases nullness (increases certainty)
+      newNullness = currentNullness - evidenceImpact;
+    } else {
+      // Refuting evidence increases nullness (decreases certainty)
+      newNullness = currentNullness + evidenceImpact;
+    }
+
+    // Enforce monotonicity and bounds [0, 1]
+    newNullness = Math.max(0, Math.min(1, newNullness));
+
+    const timestamp = new Date().toISOString();
+    const deltaNullness = newNullness - currentNullness;
+
+    // Create history entry
+    const entry: NullnessHistory = {
+      concept,
+      timestamp,
+      nullness: newNullness,
+      confidence: 1 - newNullness, // Confidence is inverse of nullness
+      evidence_count: 1 // Single evidence update
+    };
+
+    // Update history
+    if (!this.history.has(concept)) {
+      this.history.set(concept, []);
+    }
+    this.history.get(concept)!.push(entry);
+
+    // TODO: Persist to database
+    // await this.persistToDatabase(entry);
+
+    return {
+      oldNullness: currentNullness,
+      newNullness,
+      deltaNullness,
+      concept,
+      timestamp
+    };
+  }
+
+  /**
+   * Get current nullness for a concept
+   */
+  async getCurrentNullness(concept: string): Promise<number> {
+    const history = await this.getNullnessHistory(concept);
+    return history.length > 0 ? history[history.length - 1].nullness : 0.5;
   }
 
   /**
