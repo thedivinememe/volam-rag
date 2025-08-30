@@ -63,7 +63,7 @@ export class RankingService {
     alpha: number = 0.6,
     beta: number = 0.3,
     gamma: number = 0.1,
-    empathyProfile: string = 'default'
+    empathyProfile: string | Record<string, number> = 'default'
   ): Promise<RankingResult> {
     // Mock evidence with realistic content for empathy calculation
     const mockEvidence: Evidence[] = [
