@@ -1,10 +1,14 @@
 import { FormEvent, useState } from 'react';
 
+import { EmpathySliders } from './EmpathySliders';
+import { useEmpathyProfile } from '../hooks/useEmpathyProfile';
+
 interface QueryInterfaceProps {
   onQuery: (
     query: string,
     mode: 'baseline' | 'volam',
-    parameters: { alpha: number; beta: number; gamma: number; k: number }
+    parameters: { alpha: number; beta: number; gamma: number; k: number },
+    empathyProfile?: Record<string, number>
   ) => void;
   loading: boolean;
 }
@@ -19,10 +23,12 @@ export const QueryInterface = ({ onQuery, loading }: QueryInterfaceProps) => {
     k: 5,
   });
 
+  const { profile, setFullProfile } = useEmpathyProfile();
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (query.trim()) {
-      onQuery(query.trim(), mode, parameters);
+      onQuery(query.trim(), mode, parameters, mode === 'volam' ? profile : undefined);
     }
   };
 
@@ -80,65 +86,74 @@ export const QueryInterface = ({ onQuery, loading }: QueryInterfaceProps) => {
 
         {/* VOLaM Parameters */}
         {mode === 'volam' && (
-          <div className="space-y-3 p-4 bg-gray-50 rounded-md">
-            <h3 className="text-sm font-medium text-gray-700">VOLaM Parameters</h3>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">α (cosine weight)</label>
-                <input
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={parameters.alpha}
-                  onChange={(e) => setParameters(prev => ({ ...prev, alpha: parseFloat(e.target.value) }))}
-                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
-                  disabled={loading}
-                />
-              </div>
+          <div className="space-y-4">
+            <div className="space-y-3 p-4 bg-gray-50 rounded-md">
+              <h3 className="text-sm font-medium text-gray-700">VOLaM Parameters</h3>
               
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">β (nullness weight)</label>
-                <input
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={parameters.beta}
-                  onChange={(e) => setParameters(prev => ({ ...prev, beta: parseFloat(e.target.value) }))}
-                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
-                  disabled={loading}
-                />
-              </div>
-              
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">γ (empathy weight)</label>
-                <input
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={parameters.gamma}
-                  onChange={(e) => setParameters(prev => ({ ...prev, gamma: parseFloat(e.target.value) }))}
-                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
-                  disabled={loading}
-                />
-              </div>
-              
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">k (top results)</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="20"
-                  value={parameters.k}
-                  onChange={(e) => setParameters(prev => ({ ...prev, k: parseInt(e.target.value) }))}
-                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
-                  disabled={loading}
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1">α (cosine weight)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={parameters.alpha}
+                    onChange={(e) => setParameters(prev => ({ ...prev, alpha: parseFloat(e.target.value) }))}
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+                    disabled={loading}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1">β (nullness weight)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={parameters.beta}
+                    onChange={(e) => setParameters(prev => ({ ...prev, beta: parseFloat(e.target.value) }))}
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+                    disabled={loading}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1">γ (empathy weight)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={parameters.gamma}
+                    onChange={(e) => setParameters(prev => ({ ...prev, gamma: parseFloat(e.target.value) }))}
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+                    disabled={loading}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1">k (top results)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={parameters.k}
+                    onChange={(e) => setParameters(prev => ({ ...prev, k: parseInt(e.target.value) }))}
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+                    disabled={loading}
+                  />
+                </div>
               </div>
             </div>
+
+            {/* Empathy Profile Sliders */}
+            <EmpathySliders
+              profile={profile}
+              onChange={setFullProfile}
+              disabled={loading}
+            />
           </div>
         )}
 

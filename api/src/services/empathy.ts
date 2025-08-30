@@ -71,9 +71,19 @@ export class EmpathyService {
    */
   calculateEmpathyFit(
     contentTags: ContentTags,
-    profileName: string = 'default'
+    profileNameOrObject: string | Record<string, number> = 'default'
   ): number {
-    const profile = this.profiles[profileName] || this.profiles.default;
+    let profile: EmpathyProfile;
+    
+    if (typeof profileNameOrObject === 'string') {
+      profile = this.profiles[profileNameOrObject] || this.profiles.default;
+    } else {
+      // Custom profile object provided
+      profile = {
+        name: 'custom',
+        stakeholders: profileNameOrObject
+      };
+    }
     
     if (!contentTags.stakeholders || contentTags.stakeholders.length === 0) {
       // If no stakeholder tags, return neutral empathy fit

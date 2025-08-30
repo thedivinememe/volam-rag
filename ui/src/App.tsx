@@ -40,7 +40,8 @@ function App() {
   const handleQuery = async (
     query: string,
     mode: 'baseline' | 'volam',
-    parameters: { alpha: number; beta: number; gamma: number; k: number }
+    parameters: { alpha: number; beta: number; gamma: number; k: number },
+    empathyProfile?: Record<string, number>
   ) => {
     setLoading(true);
     try {
@@ -54,6 +55,11 @@ function App() {
           gamma: parameters.gamma.toString(),
         }),
       });
+
+      // Add empathy profile if provided
+      if (empathyProfile && mode === 'volam') {
+        queryParams.set('empathyProfile', JSON.stringify(empathyProfile));
+      }
 
       const response = await fetch(`/api/rank?${queryParams}`);
       if (!response.ok) {

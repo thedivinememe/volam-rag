@@ -10,7 +10,15 @@ const rankQuerySchema = z.object({
   k: z.number().int().positive().default(5),
   alpha: z.number().min(0).max(1).default(0.6),
   beta: z.number().min(0).max(1).default(0.3),
-  gamma: z.number().min(0).max(1).default(0.1)
+  gamma: z.number().min(0).max(1).default(0.1),
+  empathyProfile: z.string().optional().transform((val) => {
+    if (!val) return undefined;
+    try {
+      return JSON.parse(val);
+    } catch {
+      return undefined;
+    }
+  })
 });
 
 interface RankQuery {
@@ -20,6 +28,7 @@ interface RankQuery {
   alpha?: number;
   beta?: number;
   gamma?: number;
+  empathyProfile?: string;
 }
 
 export async function rankRoutes(fastify: FastifyInstance) {
@@ -36,7 +45,8 @@ export async function rankRoutes(fastify: FastifyInstance) {
           k: { type: 'number', minimum: 1 },
           alpha: { type: 'number', minimum: 0, maximum: 1 },
           beta: { type: 'number', minimum: 0, maximum: 1 },
-          gamma: { type: 'number', minimum: 0, maximum: 1 }
+          gamma: { type: 'number', minimum: 0, maximum: 1 },
+          empathyProfile: { type: 'string' }
         },
         required: ['query']
       }
@@ -54,7 +64,8 @@ export async function rankRoutes(fastify: FastifyInstance) {
           params.k,
           params.alpha,
           params.beta,
-          params.gamma
+          params.gamma,
+          params.empathyProfile || 'default'
         );
       } else {
         results = await rankingService.rankBaseline(params.query, params.k);
