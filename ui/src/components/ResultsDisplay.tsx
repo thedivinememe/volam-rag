@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-
 import { EvidenceCard } from './EvidenceCard';
 import { useNullnessUpdate } from '../hooks/useNullnessUpdate';
+import { useState } from 'react';
 
 interface Evidence {
   id: string;
