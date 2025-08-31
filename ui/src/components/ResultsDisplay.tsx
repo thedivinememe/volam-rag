@@ -1,3 +1,8 @@
+import React, { useState } from 'react';
+
+import { EvidenceCard } from './EvidenceCard';
+import { useNullnessUpdate } from '../hooks/useNullnessUpdate';
+
 interface Evidence {
   id: string;
   content: string;
@@ -33,8 +38,45 @@ interface ResultsDisplayProps {
 }
 
 export const ResultsDisplay = ({ results }: ResultsDisplayProps) => {
-  const formatScore = (score: number) => score.toFixed(3);
+  const [updatingCardId, setUpdatingCardId] = useState<string | null>(null);
+  const { updateFromEvidence, lastUpdate } = useNullnessUpdate();
   const formatPercentage = (value: number) => `${(value * 100).toFixed(1)}%`;
+
+  const handleEvidenceClick = async (evidence: Evidence) => {
+    setUpdatingCardId(evidence.id);
+    
+    try {
+      // Detect stance from evidence content
+      const stance = detectStance(evidence.content);
+      
+      // Calculate evidence strength based on score and certainty
+      const evidenceStrength = Math.min(0.9, evidence.score * (1 - evidence.nullness));
+      
+      await updateFromEvidence(evidence.content, stance, evidenceStrength);
+      
+      // Show success feedback
+      console.log('Nullness updated successfully:', lastUpdate);
+    } catch (error) {
+      console.error('Failed to update nullness:', error);
+    } finally {
+      setUpdatingCardId(null);
+    }
+  };
+
+  // Simple stance detection helper
+  const detectStance = (content: string): 'support' | 'refute' | 'neutral' => {
+    const supportWords = ['support', 'agree', 'confirm', 'validate', 'prove', 'demonstrate', 'show', 'evidence suggests'];
+    const refuteWords = ['refute', 'disagree', 'contradict', 'disprove', 'challenge', 'oppose', 'however', 'but'];
+    
+    const lowerContent = content.toLowerCase();
+    
+    const supportCount = supportWords.filter(word => lowerContent.includes(word)).length;
+    const refuteCount = refuteWords.filter(word => lowerContent.includes(word)).length;
+    
+    if (supportCount > refuteCount) return 'support';
+    if (refuteCount > supportCount) return 'refute';
+    return 'neutral';
+  };
 
   return (
     <div className="space-y-6">
@@ -113,69 +155,31 @@ export const ResultsDisplay = ({ results }: ResultsDisplayProps) => {
         
         <div className="space-y-4">
           {results.evidence.map((evidence, index) => (
-            <div
+            <EvidenceCard
               key={evidence.id}
-              className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-            >
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center space-x-2">
-                  <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded">
-                    #{index + 1}
-                  </span>
-                  <span className="text-sm text-gray-600">{evidence.source}</span>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-semibold text-gray-900">
-                    {formatScore(evidence.score)}
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {results.mode === 'volam' ? 'VOLaM Score' : 'Cosine Score'}
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-gray-700 mb-3 leading-relaxed">{evidence.content}</p>
-
-              {/* Score Breakdown for VOLaM */}
-              {results.mode === 'volam' && (
-                <div className="grid grid-cols-3 gap-3 text-sm">
-                  <div className="bg-blue-50 p-2 rounded text-center">
-                    <div className="font-medium text-blue-700">
-                      {formatScore(evidence.cosineScore)}
-                    </div>
-                    <div className="text-blue-600 text-xs">Cosine</div>
-                  </div>
-                  <div className="bg-green-50 p-2 rounded text-center">
-                    <div className="font-medium text-green-700">
-                      {formatScore(1 - evidence.nullness)}
-                    </div>
-                    <div className="text-green-600 text-xs">Certainty</div>
-                  </div>
-                  <div className="bg-purple-50 p-2 rounded text-center">
-                    <div className="font-medium text-purple-700">
-                      {formatScore(evidence.empathyFit)}
-                    </div>
-                    <div className="text-purple-600 text-xs">Empathy Fit</div>
-                  </div>
-                </div>
-              )}
-
-              {/* Metadata */}
-              {Object.keys(evidence.metadata).length > 0 && (
-                <details className="mt-3">
-                  <summary className="text-sm text-gray-500 cursor-pointer hover:text-gray-700">
-                    View metadata
-                  </summary>
-                  <div className="mt-2 p-2 bg-gray-50 rounded text-xs">
-                    <pre className="whitespace-pre-wrap">
-                      {JSON.stringify(evidence.metadata, null, 2)}
-                    </pre>
-                  </div>
-                </details>
-              )}
-            </div>
+              evidence={evidence}
+              index={index}
+              mode={results.mode}
+              onCardClick={handleEvidenceClick}
+              isUpdating={updatingCardId === evidence.id}
+            />
           ))}
         </div>
+        
+        {/* Nullness Update Feedback */}
+        {lastUpdate && (
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <div className="text-sm text-blue-800">
+              <strong>Nullness Updated:</strong> Concept "{lastUpdate.data?.concept}" 
+              {lastUpdate.data && (
+                <span> changed from {(lastUpdate.data.old_nullness * 100).toFixed(1)}% to {(lastUpdate.data.new_nullness * 100).toFixed(1)}% nullness</span>
+              )}
+              {lastUpdate.metadata && (
+                <span> (Response time: {lastUpdate.metadata.responseTime}ms)</span>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
