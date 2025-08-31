@@ -34,9 +34,10 @@ interface QueryResult {
 
 interface ResultsDisplayProps {
   results: QueryResult;
+  onConceptSelect?: (concept: string) => void;
 }
 
-export const ResultsDisplay = ({ results }: ResultsDisplayProps) => {
+export const ResultsDisplay = ({ results, onConceptSelect }: ResultsDisplayProps) => {
   const [updatingCardId, setUpdatingCardId] = useState<string | null>(null);
   const { updateFromEvidence, lastUpdate } = useNullnessUpdate();
   const formatPercentage = (value: number) => `${(value * 100).toFixed(1)}%`;
@@ -45,6 +46,14 @@ export const ResultsDisplay = ({ results }: ResultsDisplayProps) => {
     setUpdatingCardId(evidence.id);
     
     try {
+      // Extract concept from evidence content
+      const concept = extractConceptFromContent(evidence.content);
+      
+      // Notify parent component about concept selection
+      if (onConceptSelect) {
+        onConceptSelect(concept);
+      }
+      
       // Detect stance from evidence content
       const stance = detectStance(evidence.content);
       
@@ -60,6 +69,20 @@ export const ResultsDisplay = ({ results }: ResultsDisplayProps) => {
     } finally {
       setUpdatingCardId(null);
     }
+  };
+
+  // Extract concept from content (same logic as in useNullnessUpdate)
+  const extractConceptFromContent = (content: string): string => {
+    const words = content.toLowerCase().split(/\s+/);
+    const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these', 'those']);
+    
+    const meaningfulWords = words.filter(word => 
+      word.length > 3 && 
+      !stopWords.has(word) && 
+      /^[a-z]+$/.test(word)
+    );
+    
+    return meaningfulWords[0] || 'general_concept';
   };
 
   // Simple stance detection helper

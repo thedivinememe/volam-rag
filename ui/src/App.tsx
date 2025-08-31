@@ -1,4 +1,4 @@
-import { NullnessChart } from './components/NullnessChart';
+import { ConceptPanel } from './components/ConceptPanel';
 import { QueryInterface } from './components/QueryInterface';
 import { ResultsDisplay } from './components/ResultsDisplay';
 import { useState } from 'react';
@@ -36,6 +36,7 @@ interface QueryResult {
 function App() {
   const [results, setResults] = useState<QueryResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [selectedConcept, setSelectedConcept] = useState<string | undefined>(undefined);
 
   const handleQuery = async (
     query: string,
@@ -95,7 +96,7 @@ function App() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Query Interface */}
           <div className="lg:col-span-1">
             <QueryInterface onQuery={handleQuery} loading={loading} />
@@ -104,7 +105,10 @@ function App() {
           {/* Results Display */}
           <div className="lg:col-span-2">
             {results ? (
-              <ResultsDisplay results={results} />
+              <ResultsDisplay 
+                results={results} 
+                onConceptSelect={setSelectedConcept}
+              />
             ) : (
               <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
                 <div className="text-6xl mb-4">🔍</div>
@@ -113,14 +117,12 @@ function App() {
               </div>
             )}
           </div>
-        </div>
 
-        {/* Nullness Tracking Chart */}
-        {results && (
-          <div className="mt-8">
-            <NullnessChart />
+          {/* Concept Panel */}
+          <div className="lg:col-span-1">
+            <ConceptPanel selectedConcept={selectedConcept} />
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
