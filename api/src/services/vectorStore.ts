@@ -12,7 +12,7 @@ export interface VectorDocument {
     source: string;
     chunkIndex: number;
     tokens: number;
-    [key: string]: any;
+    [key: string]: string | number | boolean;
   };
 }
 
@@ -106,10 +106,11 @@ export class VectorStoreFactory {
     let store: VectorStore;
 
     switch (config.backend) {
-      case 'faiss':
+      case 'faiss': {
         const { FaissVectorStore } = await import('./vectorStore/faissStore.js');
         store = new FaissVectorStore(config);
         break;
+      }
       case 'chroma':
         throw new Error('Chroma vector store not implemented yet');
       case 'sqlite':
