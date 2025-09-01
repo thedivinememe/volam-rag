@@ -33,6 +33,7 @@ interface RankQuery {
 
 export async function rankRoutes(fastify: FastifyInstance) {
   const rankingService = new RankingService();
+  await rankingService.initialize(); // Initialize vector store
   const nullnessService = new NullnessService();
 
   fastify.get('/rank', {
