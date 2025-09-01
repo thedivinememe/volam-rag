@@ -1,10 +1,14 @@
 import Fastify from 'fastify';
 import { answerRoutes } from './routes/answer.js';
+import { config } from 'dotenv';
 import cors from '@fastify/cors';
 import { nullnessRoutes } from './routes/nullness.js';
 import { rankRoutes } from './routes/rank.js';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
+
+// Load environment variables
+config();
 
 const fastify = Fastify({
   logger: true

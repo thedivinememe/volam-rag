@@ -1,52 +1,57 @@
 import { Evidence, RankingResult } from '../types/core.js';
+import { VectorStore, VectorStoreFactory } from './vectorStore.js';
 
+import { EmbeddingService } from './embedding.js';
 import { EmpathyService } from './empathy.js';
 
 export class RankingService {
-  private vectorStore: any; // Will be initialized with FAISS/Chroma
-  private embeddings: any; // Will be initialized with embedding model
+  private vectorStore!: VectorStore; // Will be initialized in initialize()
+  private embeddingService: EmbeddingService;
   private empathyService: EmpathyService;
 
   constructor() {
-    // TODO: Initialize vector store and embedding model
+    // Initialize embedding service
+    this.embeddingService = new EmbeddingService({
+      model: 'text-embedding-3-small',
+      dimensions: 1536
+    });
+
     this.empathyService = new EmpathyService();
-    console.log('RankingService initialized');
+    console.log('RankingService initialized with embeddings');
+  }
+
+  /**
+   * Initialize the vector store and embedding service
+   */
+  async initialize(): Promise<void> {
+    // Initialize vector store with FAISS backend
+    this.vectorStore = await VectorStoreFactory.create({
+      backend: 'faiss',
+      dimensions: 1536,
+      indexPath: 'data/embeddings/faiss.index'
+    });
+    console.log('RankingService vector store initialized');
   }
 
   /**
    * Baseline ranking using cosine similarity only
    */
   async rankBaseline(query: string, k: number = 5): Promise<RankingResult> {
-    // TODO: Implement actual vector search
-    const mockEvidence: Evidence[] = [
-      {
-        id: '1',
-        content: 'Mock evidence content for baseline ranking',
-        score: 0.85,
-        cosineScore: 0.85,
-        nullness: 0.2,
-        empathyFit: 0.0, // Not used in baseline
-        source: 'mock-doc-1',
-        metadata: { type: 'baseline' }
-      },
-      {
-        id: '2',
-        content: 'Another piece of evidence with lower similarity',
-        score: 0.72,
-        cosineScore: 0.72,
-        nullness: 0.3,
-        empathyFit: 0.0,
-        source: 'mock-doc-2',
-        metadata: { type: 'baseline' }
-      }
-    ];
+    // Generate embedding for the query
+    const queryEmbedding = await this.embeddingService.embed(query);
+    
+    // Search for similar documents
+    const searchResults = await this.vectorStore.search(queryEmbedding.embedding, k);
+    
+    // Convert search results to Evidence objects
+    const evidence: Evidence[] = searchResults.map(result => this.convertToEvidence(result));
 
-    const answer = this.composeAnswer(mockEvidence, query);
-    const confidence = this.calculateConfidence(mockEvidence);
-    const nullness = this.calculateAverageNullness(mockEvidence);
+    const answer = this.composeAnswer(evidence, query);
+    const confidence = this.calculateConfidence(evidence);
+    const nullness = this.calculateAverageNullness(evidence);
 
     return {
-      evidence: mockEvidence.slice(0, k),
+      evidence,
       answer,
       confidence,
       nullness,
@@ -65,62 +70,25 @@ export class RankingService {
     gamma: number = 0.1,
     empathyProfile: string | Record<string, number> = 'default'
   ): Promise<RankingResult> {
-    // Mock evidence with realistic content for empathy calculation
-    const mockEvidence: Evidence[] = [
-      {
-        id: '1',
-        content: 'Climate change affects vulnerable communities and requires policy intervention by government officials to protect affected populations.',
-        score: 0.0, // Will be calculated
-        cosineScore: 0.82,
-        nullness: 0.15,
-        empathyFit: 0.0, // Will be calculated
-        source: 'climate-policy-doc',
-        metadata: { 
-          type: 'volam',
-          domain: 'climate',
-          stakeholders: ['affected_communities', 'policymakers']
-        }
-      },
-      {
-        id: '2',
-        content: 'Expert researchers and scientists have developed new technology solutions for environmental conservation.',
-        score: 0.0,
-        cosineScore: 0.75,
-        nullness: 0.25,
-        empathyFit: 0.0, // Will be calculated
-        source: 'research-tech-doc',
-        metadata: { 
-          type: 'volam',
-          domain: 'technology',
-          stakeholders: ['experts', 'environmental_scientists']
-        }
-      },
-      {
-        id: '3',
-        content: 'Public health initiatives benefit the general public and healthcare workers in medical facilities.',
-        score: 0.0,
-        cosineScore: 0.68,
-        nullness: 0.35,
-        empathyFit: 0.0, // Will be calculated
-        source: 'health-public-doc',
-        metadata: { 
-          type: 'volam',
-          domain: 'health',
-          stakeholders: ['general_public', 'healthcare_workers']
-        }
-      }
-    ];
+    // Generate embedding for the query
+    const queryEmbedding = await this.embeddingService.embed(query);
+    
+    // Search for similar documents (get more than k to allow for re-ranking)
+    const searchResults = await this.vectorStore.search(queryEmbedding.embedding, Math.max(k * 2, 10));
+    
+    // Convert search results to Evidence objects
+    const evidence: Evidence[] = searchResults.map(result => this.convertToEvidence(result));
 
     // Calculate empathy fit for each evidence piece
-    for (const evidence of mockEvidence) {
-      const contentTags = this.empathyService.extractContentTags(evidence.content, evidence.metadata);
-      evidence.empathyFit = this.empathyService.calculateEmpathyFit(contentTags, empathyProfile);
+    for (const evidenceItem of evidence) {
+      const contentTags = this.empathyService.extractContentTags(evidenceItem.content, evidenceItem.metadata);
+      evidenceItem.empathyFit = this.empathyService.calculateEmpathyFit(contentTags, empathyProfile);
       
       // Calculate VOLaM score
-      evidence.score = this.calculateVOLaMScore(
-        evidence.cosineScore,
-        evidence.nullness,
-        evidence.empathyFit,
+      evidenceItem.score = this.calculateVOLaMScore(
+        evidenceItem.cosineScore,
+        evidenceItem.nullness,
+        evidenceItem.empathyFit,
         alpha,
         beta,
         gamma
@@ -128,7 +96,7 @@ export class RankingService {
     }
 
     // Sort by VOLaM score, with tie-breaking by cosine similarity
-    mockEvidence.sort((a, b) => {
+    evidence.sort((a: Evidence, b: Evidence) => {
       const scoreDiff = b.score - a.score;
       if (Math.abs(scoreDiff) < 0.001) { // Tie-breaking threshold
         return b.cosineScore - a.cosineScore; // Tie-break by cosine
@@ -136,18 +104,46 @@ export class RankingService {
       return scoreDiff;
     });
 
-    const answer = this.composeAnswer(mockEvidence, query);
-    const confidence = this.calculateConfidence(mockEvidence);
-    const nullness = this.calculateAverageNullness(mockEvidence);
+    const answer = this.composeAnswer(evidence, query);
+    const confidence = this.calculateConfidence(evidence);
+    const nullness = this.calculateAverageNullness(evidence);
 
     return {
-      evidence: mockEvidence.slice(0, k),
+      evidence: evidence.slice(0, k),
       answer,
       confidence,
       nullness,
       mode: 'volam',
       parameters: { alpha, beta, gamma },
       empathyProfile: typeof empathyProfile === 'string' ? empathyProfile : undefined
+    };
+  }
+
+  /**
+   * Convert SearchResult to Evidence object
+   */
+  private convertToEvidence(searchResult: any): Evidence {
+    const { document, score } = searchResult;
+    
+    // Calculate basic nullness based on confidence (inverse relationship)
+    // Higher similarity scores = lower nullness (more certainty)
+    const nullness = Math.max(0, Math.min(1, 1 - score));
+    
+    return {
+      id: document.id,
+      content: document.content,
+      score: score, // Will be recalculated for VOLaM mode
+      cosineScore: score,
+      nullness: nullness,
+      empathyFit: 0.0, // Will be calculated later for VOLaM mode
+      source: document.metadata.source || 'unknown',
+      metadata: {
+        domain: document.metadata.domain,
+        source: document.metadata.source,
+        chunkIndex: document.metadata.chunkIndex,
+        tokens: document.metadata.tokens,
+        ...document.metadata
+      }
     };
   }
 

@@ -1,12 +1,73 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RankingService } from './ranking.js';
+
+// Mock the external dependencies
+vi.mock('./embedding.js', () => ({
+  EmbeddingService: vi.fn().mockImplementation(() => ({
+    embed: vi.fn().mockResolvedValue({
+      embedding: new Array(1536).fill(0.1) // Mock 1536-dimensional embedding
+    })
+  }))
+}));
+
+vi.mock('./vectorStore.js', () => ({
+  VectorStoreFactory: {
+    create: vi.fn().mockResolvedValue({
+      search: vi.fn().mockImplementation((embedding, k) => {
+        const allResults = [
+          {
+            document: {
+              id: 'doc1',
+              content: 'Climate change affects vulnerable communities and requires policy intervention.',
+              metadata: {
+                domain: 'climate',
+                source: 'climate-policy-doc',
+                chunkIndex: 0,
+                tokens: 150
+              }
+            },
+            score: 0.85
+          },
+          {
+            document: {
+              id: 'doc2',
+              content: 'Expert researchers have developed new technology solutions for environmental conservation.',
+              metadata: {
+                domain: 'technology',
+                source: 'research-tech-doc',
+                chunkIndex: 1,
+                tokens: 120
+              }
+            },
+            score: 0.75
+          },
+          {
+            document: {
+              id: 'doc3',
+              content: 'Public health initiatives benefit the general public and healthcare workers.',
+              metadata: {
+                domain: 'health',
+                source: 'health-public-doc',
+                chunkIndex: 2,
+                tokens: 100
+              }
+            },
+            score: 0.65
+          }
+        ];
+        return Promise.resolve(allResults.slice(0, k));
+      })
+    })
+  }
+}));
 
 describe('RankingService', () => {
   let rankingService: RankingService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     rankingService = new RankingService();
+    await rankingService.initialize();
   });
 
   it('should create instance', () => {
