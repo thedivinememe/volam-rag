@@ -1,7 +1,9 @@
 import { ConceptPanel } from './components/ConceptPanel';
 import { QueryInterface } from './components/QueryInterface';
 import { ResultsDisplay } from './components/ResultsDisplay';
+import { TelemetryPanel } from './components/TelemetryPanel';
 import { useState } from 'react';
+import { useTelemetry } from './hooks/useTelemetry';
 
 interface Evidence {
   id: string;
@@ -37,6 +39,7 @@ function App() {
   const [results, setResults] = useState<QueryResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedConcept, setSelectedConcept] = useState<string | undefined>(undefined);
+  const { entries, logRequest, clearEntries } = useTelemetry();
 
   const handleQuery = async (
     query: string,
@@ -45,6 +48,8 @@ function App() {
     empathyProfile?: Record<string, number>
   ) => {
     setLoading(true);
+    const startTime = performance.now();
+    
     try {
       const queryParams = new URLSearchParams({
         query,
@@ -68,9 +73,23 @@ function App() {
       }
 
       const data = await response.json();
+      const endTime = performance.now();
+      const responseTime = Math.round(endTime - startTime);
+
+      // Log telemetry data
+      const topKScores = data.evidence.slice(0, 3).map((e: Evidence) => e.score);
+      logRequest(mode, query, parameters, responseTime, topKScores, true);
+
       setResults(data);
     } catch (error) {
+      const endTime = performance.now();
+      const responseTime = Math.round(endTime - startTime);
+      
       console.error('Query error:', error);
+      
+      // Log failed request
+      logRequest(mode, query, parameters, responseTime, [], false, error instanceof Error ? error.message : 'Unknown error');
+      
       // TODO: Add proper error handling
     } finally {
       setLoading(false);
@@ -124,6 +143,9 @@ function App() {
           </div>
         </div>
       </main>
+      
+      {/* Telemetry Panel */}
+      <TelemetryPanel entries={entries} onClear={clearEntries} />
     </div>
   );
 }
