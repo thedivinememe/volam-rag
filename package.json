@@ -4,7 +4,7 @@
   "description": "VOLaM-RAG: Evidence ranking with nullness tracking and empathy profiling",
   "main": "index.js",
   "scripts": {
-    "seed": "tsx scripts/seed_corpus.ts",
+    "seed": "tsx scripts/seed.ts",
     "eval:baseline": "tsx scripts/eval-baseline.ts",
     "eval:baseline:seed": "tsx scripts/eval-baseline.ts --seed=42",
     "eval:volam": "tsx scripts/eval-volam.ts",
@@ -46,6 +46,7 @@
     "ajv-formats": "^3.0.1",
     "axios": "^1.6.0",
     "chromadb": "^1.8.0",
+    "dotenv": "^17.2.1",
     "faiss-node": "^0.5.0",
     "openai": "^4.0.0",
     "sqlite3": "^5.1.0"

@@ -5,28 +5,29 @@
  * Usage: npm run seed
  */
 
+import { Chunk, ChunkingService } from './chunking.js';
+
+import { config } from 'dotenv';
 import { promises as fs } from 'fs';
 import path from 'path';
 
-// interface DocumentChunk {
-//   id: string;
-//   content: string;
-//   source: string;
-//   metadata: Record<string, any>;
-// }
+// Load environment variables from .env file
+
+config();
 
 class SeedService {
   private dataDir = path.join(process.cwd(), 'data');
   private corpusDir = path.join(this.dataDir, 'corpus');
   private embeddingsDir = path.join(this.dataDir, 'embeddings');
+  private chunkingService = new ChunkingService();
 
   async run(): Promise<void> {
     console.log('🌱 Starting VOLaM-RAG seeding process...');
 
     try {
       await this.ensureDirectories();
-      await this.loadCorpus();
-      await this.generateEmbeddings();
+      const chunks = await this.loadCorpus();
+      await this.generateEmbeddings(chunks);
       await this.initializeNullnessTracking();
       await this.setupEmpathyProfiles();
 
@@ -52,7 +53,7 @@ class SeedService {
     }
   }
 
-  private async loadCorpus(): Promise<void> {
+  private async loadCorpus(): Promise<Chunk[]> {
     console.log('📚 Loading and chunking corpus...');
 
     // Check if corpus files exist
@@ -67,8 +68,21 @@ class SeedService {
       await this.createSampleCorpus();
     }
 
-    // TODO: Implement actual document chunking
+    // Chunk all documents in the corpus
+    const chunks = await this.chunkingService.chunkCorpus(this.corpusDir);
+    
+    // Get and display chunking statistics
+    const stats = this.chunkingService.getChunkingStats(chunks);
+    console.log('📊 Chunking Statistics:');
+    console.log(`  Total chunks: ${stats.totalChunks}`);
+    console.log(`  Token distribution: min=${stats.tokenDistribution.min}, max=${stats.tokenDistribution.max}, avg=${stats.tokenDistribution.avg}`);
+    
+    for (const [domain, domainStats] of Object.entries(stats.domainStats)) {
+      console.log(`  ${domain}: ${domainStats.count} chunks, avg ${domainStats.avgTokens} tokens`);
+    }
+
     console.log('📄 Document chunking completed');
+    return chunks;
   }
 
   private async createSampleCorpus(): Promise<void> {
@@ -107,24 +121,99 @@ class SeedService {
     console.log(`📝 Created ${sampleDocs.length} sample documents`);
   }
 
-  private async generateEmbeddings(): Promise<void> {
+  private async generateEmbeddings(chunks: Chunk[]): Promise<void> {
     console.log('🔢 Generating embeddings...');
 
-    // TODO: Implement actual embedding generation with OpenAI/HuggingFace
-    const mockEmbeddings = {
-      model: 'text-embedding-ada-002',
+    if (chunks.length === 0) {
+      console.log('⚠️  No chunks to process for embeddings');
+      return;
+    }
+
+    // Import embedding service (using file:// URL for Windows compatibility)
+    const embeddingPath = new URL('file://' + path.join(process.cwd(), 'api/src/services/embedding.js').replace(/\\/g, '/'));
+    const vectorStorePath = new URL('file://' + path.join(process.cwd(), 'api/src/services/vectorStore.js').replace(/\\/g, '/'));
+    
+    const { EmbeddingService } = await import(embeddingPath.href);
+    const { VectorStoreFactory } = await import(vectorStorePath.href);
+    
+    // Initialize embedding service
+    const embeddingService = new EmbeddingService({
+      model: 'text-embedding-3-small',
+      dimensions: 1536
+    });
+
+    // Generate real embeddings using OpenAI
+    const embeddedChunks = [];
+    console.log(`📊 Processing ${chunks.length} chunks...`);
+    
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      console.log(`  Processing chunk ${i + 1}/${chunks.length}: ${chunk.id}`);
+      
+      try {
+        const result = await embeddingService.embed(chunk.content);
+        embeddedChunks.push({
+          id: chunk.id,
+          domain: chunk.domain,
+          source: chunk.source,
+          content: chunk.content,
+          tokens: chunk.tokens,
+          metadata: chunk.metadata,
+          embedding: result.embedding
+        });
+      } catch (error) {
+        console.error(`❌ Failed to generate embedding for chunk ${chunk.id}:`, error);
+        throw error;
+      }
+    }
+
+    // Create embedding data structure
+    const embeddingData = {
+      model: 'text-embedding-3-small',
       dimensions: 1536,
-      chunks: [
-        { id: 'chunk-1', embedding: new Array(1536).fill(0).map(() => Math.random()) },
-        { id: 'chunk-2', embedding: new Array(1536).fill(0).map(() => Math.random()) },
-        { id: 'chunk-3', embedding: new Array(1536).fill(0).map(() => Math.random()) }
-      ]
+      generated: new Date().toISOString(),
+      chunks: embeddedChunks
     };
 
+    // Save embeddings to JSON file
     const embeddingsPath = path.join(this.embeddingsDir, 'embeddings.json');
-    await fs.writeFile(embeddingsPath, JSON.stringify(mockEmbeddings, null, 2));
+    await fs.writeFile(embeddingsPath, JSON.stringify(embeddingData, null, 2));
 
-    console.log('✨ Embeddings generated and saved');
+    // Save chunks metadata separately for easier access
+    const chunksPath = path.join(this.embeddingsDir, 'chunks.json');
+    await fs.writeFile(chunksPath, JSON.stringify(chunks, null, 2));
+
+    // Create and populate FAISS vector store
+    console.log('🔍 Creating FAISS vector store...');
+    const vectorStore = await VectorStoreFactory.create({
+      backend: 'faiss',
+      dimensions: 1536,
+      indexPath: path.join(this.embeddingsDir, 'faiss.index')
+    });
+
+    // Convert chunks to VectorDocument format
+    const vectorDocuments = embeddedChunks.map(chunk => ({
+      id: chunk.id,
+      content: chunk.content,
+      embedding: chunk.embedding,
+      metadata: {
+        domain: chunk.domain,
+        source: chunk.source,
+        chunkIndex: chunks.findIndex(c => c.id === chunk.id),
+        tokens: chunk.tokens
+      }
+    }));
+
+    // Add documents to vector store
+    await vectorStore.addDocuments(vectorDocuments);
+    
+    // Save the vector store
+    await vectorStore.save();
+    await vectorStore.close();
+
+    console.log(`✨ Generated embeddings for ${chunks.length} chunks`);
+    console.log(`📁 Saved embeddings to: ${embeddingsPath}`);
+    console.log(`🔍 Created FAISS index with ${vectorDocuments.length} documents`);
   }
 
   private async initializeNullnessTracking(): Promise<void> {

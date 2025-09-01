@@ -1,11 +1,11 @@
-import * as faiss from 'faiss-node';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
 import { SearchResult, VectorDocument, VectorStore, VectorStoreConfig } from '../vectorStore.js';
 
 export class FaissVectorStore extends VectorStore {
-  private index: faiss.IndexFlatIP | null = null;
+  private index: any | null = null;
+  private faiss: any = null;
   private documents: Map<string, VectorDocument> = new Map();
   private idToIndex: Map<string, number> = new Map();
   private indexToId: Map<number, string> = new Map();
@@ -19,19 +19,21 @@ export class FaissVectorStore extends VectorStore {
   }
 
   async initialize(): Promise<void> {
+    // Load faiss module dynamically
+    const faissModule = await import('faiss-node');
+    this.faiss = faissModule.default;
+    
     try {
-      // Create FAISS index for inner product (cosine similarity with normalized vectors)
-      this.index = new faiss.IndexFlatIP(this.config.dimensions);
-      
-      // Try to load existing index
+      // Try to load existing index first
       await this.load();
-      
-      this.isInitialized = true;
       console.log(`FAISS vector store initialized with ${this.documents.size} documents`);
     } catch (error) {
       console.log('No existing FAISS index found, starting fresh');
-      this.isInitialized = true;
+      // Create new FAISS index for inner product (cosine similarity with normalized vectors)
+      this.index = new this.faiss.IndexFlatIP(this.config.dimensions);
     }
+    
+    this.isInitialized = true;
   }
 
   async addDocuments(documents: VectorDocument[]): Promise<void> {
@@ -114,9 +116,9 @@ export class FaissVectorStore extends VectorStore {
   }
 
   async clear(): Promise<void> {
-    if (this.index) {
+    if (this.index && this.faiss) {
       // Create new empty index
-      this.index = new faiss.IndexFlatIP(this.config.dimensions);
+      this.index = new this.faiss.IndexFlatIP(this.config.dimensions);
     }
     
     this.documents.clear();
@@ -166,7 +168,7 @@ export class FaissVectorStore extends VectorStore {
 
     try {
       // Load FAISS index
-      this.index = faiss.IndexFlatIP.read(this.config.indexPath);
+      this.index = this.faiss.IndexFlatIP.read(this.config.indexPath);
 
       // Load document metadata
       const metadataPath = this.config.indexPath + '.metadata.json';
