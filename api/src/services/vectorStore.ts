@@ -111,13 +111,9 @@ export class VectorStoreFactory {
         store = new FaissVectorStore(config);
         break;
       case 'chroma':
-        const { ChromaVectorStore } = await import('./vectorStore/chromaStore.js');
-        store = new ChromaVectorStore(config);
-        break;
+        throw new Error('Chroma vector store not implemented yet');
       case 'sqlite':
-        const { SqliteVectorStore } = await import('./vectorStore/sqliteStore.js');
-        store = new SqliteVectorStore(config);
-        break;
+        throw new Error('SQLite vector store not implemented yet');
       default:
         throw new Error(`Unsupported vector store backend: ${config.backend}`);
     }
