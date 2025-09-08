@@ -6,6 +6,8 @@ config({ path: 'api/.env' });
 
 // Set a mock API key to prevent initialization errors
 process.env.OPENAI_API_KEY = 'mock-api-key-for-testing';
+// Set NODE_ENV to test to skip real service initialization
+process.env.NODE_ENV = 'test';
 
 console.log('Setting up test mocks for API tests');
 
@@ -288,8 +290,8 @@ vi.mock('../services/empathy.js', () => ({
 }));
 
 // Mock the RankingService to provide complete mock implementation
-vi.mock('../services/ranking.js', () => ({
-  RankingService: vi.fn().mockImplementation(() => ({
+vi.mock('../services/ranking.js', () => {
+  const mockRankingService = {
     initialize: vi.fn().mockResolvedValue(undefined),
     rankBaseline: vi.fn().mockImplementation((query, k = 3) => {
       // Create evidence array limited by k parameter
@@ -412,8 +414,12 @@ vi.mock('../services/ranking.js', () => ({
         empathyProfile: empathyProfile
       });
     })
-  }))
-}));
+  };
+
+  return {
+    RankingService: vi.fn().mockImplementation(() => mockRankingService)
+  };
+});
 
 // Mock the AnswerService to provide complete mock implementation
 vi.mock('../services/answer.js', () => ({
