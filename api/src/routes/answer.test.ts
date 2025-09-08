@@ -1,9 +1,170 @@
 import Fastify, { FastifyInstance } from 'fastify';
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { answerRoutes } from './answer.js';
 import fs from 'fs';
 import path from 'path';
+
+// Mock all services before importing anything else
+vi.mock('../services/ranking.js', () => ({
+  RankingService: vi.fn().mockImplementation(() => ({
+    initialize: vi.fn().mockResolvedValue(undefined),
+    rankBaseline: vi.fn().mockResolvedValue({
+      evidence: [
+        {
+          id: 'mock-doc-1',
+          content: 'This is mock evidence about nullness in VOLaM theory.',
+          score: 0.85,
+          cosineScore: 0.85,
+          nullness: 0.15,
+          empathyFit: 0.7,
+          source: 'mock-source-1.txt',
+          metadata: {
+            domain: 'null-not-null',
+            source: 'mock-source-1.txt',
+            chunkIndex: 0,
+            tokens: 50
+          }
+        },
+        {
+          id: 'mock-doc-2',
+          content: 'Additional mock evidence explaining theoretical foundations.',
+          score: 0.78,
+          cosineScore: 0.78,
+          nullness: 0.22,
+          empathyFit: 0.7,
+          source: 'mock-source-2.txt',
+          metadata: {
+            domain: 'null-not-null',
+            source: 'mock-source-2.txt',
+            chunkIndex: 1,
+            tokens: 45
+          }
+        },
+        {
+          id: 'mock-doc-3',
+          content: 'Third piece of mock evidence for comprehensive answers.',
+          score: 0.72,
+          cosineScore: 0.72,
+          nullness: 0.28,
+          empathyFit: 0.7,
+          source: 'mock-source-3.txt',
+          metadata: {
+            domain: 'null-not-null',
+            source: 'mock-source-3.txt',
+            chunkIndex: 2,
+            tokens: 40
+          }
+        }
+      ],
+      answer: 'Mock answer based on evidence',
+      confidence: 0.8,
+      nullness: 0.22,
+      mode: 'baseline'
+    }),
+    rankWithVOLaM: vi.fn().mockResolvedValue({
+      evidence: [
+        {
+          id: 'mock-doc-1',
+          content: 'This is mock evidence about nullness in VOLaM theory.',
+          score: 0.87,
+          cosineScore: 0.85,
+          nullness: 0.15,
+          empathyFit: 0.7,
+          source: 'mock-source-1.txt',
+          metadata: {
+            domain: 'null-not-null',
+            source: 'mock-source-1.txt',
+            chunkIndex: 0,
+            tokens: 50
+          }
+        },
+        {
+          id: 'mock-doc-2',
+          content: 'Additional mock evidence explaining theoretical foundations.',
+          score: 0.80,
+          cosineScore: 0.78,
+          nullness: 0.22,
+          empathyFit: 0.7,
+          source: 'mock-source-2.txt',
+          metadata: {
+            domain: 'null-not-null',
+            source: 'mock-source-2.txt',
+            chunkIndex: 1,
+            tokens: 45
+          }
+        },
+        {
+          id: 'mock-doc-3',
+          content: 'Third piece of mock evidence for comprehensive answers.',
+          score: 0.74,
+          cosineScore: 0.72,
+          nullness: 0.28,
+          empathyFit: 0.7,
+          source: 'mock-source-3.txt',
+          metadata: {
+            domain: 'null-not-null',
+            source: 'mock-source-3.txt',
+            chunkIndex: 2,
+            tokens: 40
+          }
+        }
+      ],
+      answer: 'Mock VOLaM answer based on evidence',
+      confidence: 0.82,
+      nullness: 0.22,
+      mode: 'volam',
+      parameters: { alpha: 0.6, beta: 0.3, gamma: 0.1 }
+    })
+  }))
+}));
+
+vi.mock('../services/answer.js', () => ({
+  AnswerService: vi.fn().mockImplementation(() => ({
+    composeAnswer: vi.fn().mockResolvedValue({
+      answer: 'Based on the available evidence, here\'s what I found regarding your query:\n\nAccording to the evidence, "This is mock evidence about nullness in VOLaM theory." [1]\n\nAccording to the evidence, "Additional mock evidence explaining theoretical foundations." [2]\n\nAccording to the evidence, "Third piece of mock evidence for comprehensive answers." [3]\n\n**Sources:**\n[1] mock-source-1.txt (Score: 0.850)\n[2] mock-source-2.txt (Score: 0.780)\n[3] mock-source-3.txt (Score: 0.720)',
+      citations: [
+        {
+          id: 'mock-doc-1',
+          content: 'This is mock evidence about nullness in VOLaM theory.',
+          source: 'mock-source-1.txt',
+          score: 0.85,
+          index: 1,
+          quotedText: 'This is mock evidence about nullness in VOLaM theory.'
+        },
+        {
+          id: 'mock-doc-2',
+          content: 'Additional mock evidence explaining theoretical foundations.',
+          source: 'mock-source-2.txt',
+          score: 0.78,
+          index: 2,
+          quotedText: 'Additional mock evidence explaining theoretical foundations.'
+        },
+        {
+          id: 'mock-doc-3',
+          content: 'Third piece of mock evidence for comprehensive answers.',
+          source: 'mock-source-3.txt',
+          score: 0.72,
+          index: 3,
+          quotedText: 'Third piece of mock evidence for comprehensive answers.'
+        }
+      ],
+      confidence: 0.8,
+      rationale: 'This answer is based on 3 pieces of evidence retrieved using baseline ranking mode.',
+      metadata: {
+        evidenceCount: 3,
+        avgScore: 0.783,
+        avgNullness: 0.217,
+        synthesisMethod: 'template-based'
+      }
+    })
+  }))
+}));
+
+
+
+
+
 
 // Load QA dataset for fixture tests
 // Handle both local development (api/) and CI (root) working directories

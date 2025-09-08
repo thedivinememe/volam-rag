@@ -7,6 +7,7 @@ export default defineWorkspace([
       name: 'api',
       include: ['api/**/*.test.ts'],
       environment: 'node',
+      setupFiles: ['api/src/test/setup.ts'],
     },
   },
   // UI tests - jsdom environment
