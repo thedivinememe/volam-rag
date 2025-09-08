@@ -32,8 +32,14 @@ interface RankQuery {
 }
 
 export async function rankRoutes(fastify: FastifyInstance) {
+  // In test environment, these will be mocked automatically
   const rankingService = new RankingService();
   const nullnessService = new NullnessService();
+  
+  // Only initialize if not in test environment
+  if (process.env.NODE_ENV !== 'test') {
+    await rankingService.initialize();
+  }
 
   fastify.get('/rank', {
     schema: {
