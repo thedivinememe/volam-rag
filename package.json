@@ -10,6 +10,8 @@
     "eval:volam": "tsx scripts/eval-volam.ts",
     "eval:volam:seed": "tsx scripts/eval-volam.ts --seed=42",
     "plots:calibration": "tsx scripts/generate-calibration-plots.ts",
+    "comparison:report": "tsx scripts/generate-comparison-report.ts",
+    "comparison:report:plots": "tsx scripts/generate-comparison-report.ts --with-plots",
     "demo": "tsx scripts/demo.ts",
     "demo:quick": "tsx scripts/demo.ts --quick",
     "setup": "tsx scripts/setup.ts",

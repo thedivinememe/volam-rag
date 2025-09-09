@@ -1,7 +1,7 @@
 # VOLaM-RAG Makefile
 # Canonical commands from .clinerules
 
-.PHONY: setup seed api ui eval-baseline eval-baseline-seed eval-volam eval-volam-seed plots-calibration validate-qa demo demo-quick clean help
+.PHONY: setup seed api ui eval-baseline eval-baseline-seed eval-volam eval-volam-seed plots-calibration validate-qa demo demo-quick comparison-report comparison-report-with-plots clean help
 
 # Default target
 help:
@@ -17,6 +17,8 @@ help:
 	@echo "  make eval-volam       - Run VOLaM algorithm evaluation"
 	@echo "  make eval-volam-seed  - Run VOLaM evaluation with seed=42"
 	@echo "  make plots-calibration - Generate calibration plots"
+	@echo "  make comparison-report - Generate enhanced comparison report"
+	@echo "  make comparison-report-with-plots - Generate comparison report with plots"
 	@echo "  make validate-qa      - Validate Q/A dataset against schema"
 	@echo "  make clean            - Clean build artifacts and node_modules"
 
@@ -79,6 +81,16 @@ demo:
 demo-quick:
 	@echo "Running quick VOLaM-RAG demo..."
 	npm run demo:quick
+
+# Generate enhanced comparison report
+comparison-report:
+	@echo "Generating enhanced comparison report..."
+	npm run comparison:report
+
+# Generate enhanced comparison report with plots
+comparison-report-with-plots:
+	@echo "Generating enhanced comparison report with plots..."
+	npm run comparison:report:plots
 
 # Validate Q/A dataset against schema
 validate-qa:
