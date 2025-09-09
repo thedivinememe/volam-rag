@@ -20,4 +20,12 @@ export default defineWorkspace([
       globals: true,
     },
   },
+  // Scripts tests - Node environment
+  {
+    test: {
+      name: 'scripts',
+      include: ['scripts/**/*.test.ts'],
+      environment: 'node',
+    },
+  },
 ])
