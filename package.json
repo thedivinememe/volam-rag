@@ -10,6 +10,8 @@
     "eval:volam": "tsx scripts/eval-volam.ts",
     "eval:volam:seed": "tsx scripts/eval-volam.ts --seed=42",
     "plots:calibration": "tsx scripts/generate-calibration-plots.ts",
+    "demo": "tsx scripts/demo.ts",
+    "demo:quick": "tsx scripts/demo.ts --quick",
     "setup": "tsx scripts/setup.ts",
     "validate:qa": "tsx scripts/validate-qa.ts",
     "test": "vitest",

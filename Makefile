@@ -1,13 +1,15 @@
 # VOLaM-RAG Makefile
 # Canonical commands from .clinerules
 
-.PHONY: setup seed api ui eval-baseline eval-baseline-seed eval-volam eval-volam-seed plots-calibration validate-qa clean help
+.PHONY: setup seed api ui eval-baseline eval-baseline-seed eval-volam eval-volam-seed plots-calibration validate-qa demo demo-quick clean help
 
 # Default target
 help:
 	@echo "VOLaM-RAG Project Commands:"
 	@echo "  make setup            - Install dependencies for all components"
 	@echo "  make seed             - Chunk documents and generate embeddings"
+	@echo "  make demo             - Run complete interactive demo"
+	@echo "  make demo-quick       - Run quick demo (no evaluations)"
 	@echo "  make api              - Start the backend API server"
 	@echo "  make ui               - Start the frontend development server"
 	@echo "  make eval-baseline    - Run baseline cosine-only evaluation"
@@ -67,6 +69,16 @@ eval-volam-seed:
 plots-calibration:
 	@echo "Generating calibration plots..."
 	npm run plots:calibration
+
+# Run complete interactive demo
+demo:
+	@echo "Running VOLaM-RAG interactive demo..."
+	npm run demo
+
+# Run quick demo (no evaluations)
+demo-quick:
+	@echo "Running quick VOLaM-RAG demo..."
+	npm run demo:quick
 
 # Validate Q/A dataset against schema
 validate-qa:
